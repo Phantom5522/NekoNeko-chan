@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
 from time import sleep
 from ev3dev2.sound import Sound
-import os
-os.system('setfont Lat15-TerminusBold14')
-# os.system('setfont Lat15-TerminusBold32x16')  # try this larger font
 
 sound = Sound()
-
-print('Hello World!')
-print() # empty line
-print('EV3', 'Python rules!')
 
 #play a standard beep
 sound.beep()
