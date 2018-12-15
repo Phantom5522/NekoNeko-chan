@@ -8,6 +8,8 @@ def main():
 
 nchan = NekoNekoChan()
 
+nchan.followLine()
+
 # calibrate sensors
 
 # wait for button press before starting

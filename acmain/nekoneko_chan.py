@@ -3,7 +3,14 @@ from ev3dev2.sensor.lego import ColorSensor, InfraredSensor, TouchSensor
 from ev3dev2.motor import LargeMotor, MediumMotor, MoveSteering
 from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
 
+from pid import PIDController
+
 
 
 class NekoNekoChan(object):
-    pass
+    def __init__(self):
+        self.controller = PIDController()
+        # self.steer
+
+    def followLine(self):
+        print(self.controller.pidLoop(10, 2))
