@@ -5,10 +5,6 @@ from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
 
 from pid import PIDController
 
-# dies ist 1 test
-# test
-# dies ist ein test der sich gewaschen hat
-# master
 
 class NekoNekoChan(object):
     def __init__(self):
