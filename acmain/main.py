@@ -1,14 +1,15 @@
+#!/usr/bin/env python3
+# shebang line above is mandatory for scripts that should be run directly from EV3
+
 # import alles was wir brauchen
 from nekoneko_chan import NekoNekoChan
 
 
 
 def main():
-    pass
+    nchan = NekoNekoChan() # create object instance of robot
 
-nchan = NekoNekoChan()
-
-nchan.followLine()
+    nchan.followLine()  # test function call
 
 # calibrate sensors
 
