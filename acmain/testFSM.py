@@ -19,3 +19,6 @@ testStateMachine.states["lineBreak"] = State(lineBreak)
 testStateMachine.transitions["toFollowLine"] = Transition("followLine")
 testStateMachine.transitions["toCross1"] = Transition("cross1")
 testStateMachine.transitions["toLineBreak"] = Transition("lineBreak")
+
+testStateMachine.trans = testStateMachine.transitions["toFollowLine"]
+testStateMachine.execute()
