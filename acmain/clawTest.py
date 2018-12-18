@@ -7,6 +7,7 @@ from ev3dev2.sound import Sound
 from claw import Claw
 import os, sys
 from time import sleep, time
+import toolbox
 
 btn = Button()
 sound = Sound()
@@ -19,13 +20,6 @@ sound.beep()
 myClaw = Claw()
 
 myClaw.releaseClaw()
-
-def debug_print(*args, **kwargs):
-    '''Print debug messages to stderr.
-
-    This shows up in the output panel in VS Code.
-    '''
-    print(*args, **kwargs, file=sys.stderr)
 
 
 defaultDistance = sensIR.proximity
