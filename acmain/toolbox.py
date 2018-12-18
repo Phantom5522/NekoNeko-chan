@@ -1,9 +1,9 @@
 import os, sys
 
-class Toolbox(object):
+class Debug(object):
 
     @staticmethod
-    def debug_print(*args, **kwargs):
+    def print(*args, **kwargs):
         '''Print debug messages to stderr.
 
         This shows up in the output panel in VS Code.
