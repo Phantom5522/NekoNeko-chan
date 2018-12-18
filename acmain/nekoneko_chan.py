@@ -5,6 +5,7 @@ from ev3dev2.sensor.lego import ColorSensor, InfraredSensor, TouchSensor
 from ev3dev2.motor import LargeMotor, MediumMotor, MoveSteering
 from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
 from ev3dev2.button import Button
+from ev3dev2.sound import Sound
 
 # our custom classes
 from pid import PIDController
@@ -15,6 +16,7 @@ class NekoNekoChan(object):
     def __init__(self):
         self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
         self.claw = Claw()
+        self.sound = Sound()
         # sensor values
         self.sensLight = ColorSensor(INPUT_1)
         self.sensColor = ColorSensor(INPUT_4)
