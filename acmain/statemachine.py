@@ -1,5 +1,8 @@
 # Finite State Machine
 
 class StateMachine(object):
-    pass
+    def __ini__(self, nameArray):
+        
+
+    def getState(self, name):
     
