@@ -1,5 +1,8 @@
 from statemachine import StateMachine, State, Transition
 from toolbox import Debug
+import time, random
+
+colorSensor = "blue"
 
 def followLine():
     Debug.print("FollowLine")
@@ -20,5 +23,19 @@ testStateMachine.transitions["toFollowLine"] = Transition("followLine")
 testStateMachine.transitions["toCross1"] = Transition("cross1")
 testStateMachine.transitions["toLineBreak"] = Transition("lineBreak")
 
-testStateMachine.trans = testStateMachine.transitions["toFollowLine"]
-testStateMachine.execute()
+
+for x in range(10):
+
+    if colorSensor == "blue":
+        testStateMachine.transition("toCross1")
+    else:
+        testStateMachine.transition("toFollowLine")
+
+    testStateMachine.execute()
+
+    if random.randint(0,1):
+        colorSensor = "blue"
+    else:
+        colorSensor = "black"
+
+    time.sleep(0.5)
