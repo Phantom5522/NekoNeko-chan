@@ -7,7 +7,7 @@ from ev3dev2.sound import Sound
 from claw import Claw
 import os, sys
 from time import sleep, time
-import toolbox
+from toolbox import Debug
 
 btn = Button()
 sound = Sound()
@@ -39,16 +39,16 @@ sleep(1)
 while True:
     if not myClaw.closed and sensTouch.is_pressed:
         myClaw.closeClaw()
-        debug_print('{}: Closed'.format(time()))
+        Debug.print('{}: Closed'.format(time()))
         sound.beep()
     elif btn.up:
         myClaw.releaseClaw()
-        debug_print('{}: Released'.format(time()))
+        Debug.print('{}: Released'.format(time()))
 
         sound.beep()
 
     elif btn.enter:
         break
     elif btn.down:
-        debug_print(myClaw.closed)
+        Debug.print(myClaw.closed)
     sleep(0.02)
