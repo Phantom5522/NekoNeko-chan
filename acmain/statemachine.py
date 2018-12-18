@@ -41,5 +41,5 @@ class NekoNekoChan_FSM(StateMachine):
         super.__init__(["followLine","intersectionFirst"])
         self.hasBall = False
         
-    def transitionState():
+    def checkState():
         if
