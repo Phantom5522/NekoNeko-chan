@@ -14,7 +14,7 @@ from claw import Claw
 
 class NekoNekoChan(object):
     def __init__(self):
-        self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
+        self.pid = PIDController(kP= 2.0, kI=0.0, kD=0.1)
         self.claw = Claw()
         self.sound = Sound()
         # sensor values
