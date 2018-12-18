@@ -11,11 +11,16 @@ from ev3dev2.sound import Sound
 from pid import PIDController
 from claw import Claw
 
+from toolbox import Debug
+
 
 class NekoNekoChan(object):
     def __init__(self):
         self.pid = PIDController(kP= 2.0, kI=0.0, kD=0.1)
-        self.claw = Claw()
+        try:
+            self.claw = Claw()
+        except:
+            Debug.print('Error while initializing Claw')
         self.sound = Sound()
         # sensor values
         self.sensLight = ColorSensor(INPUT_1)
