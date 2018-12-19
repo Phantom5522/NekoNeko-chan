@@ -10,15 +10,17 @@ from toolbox import Debug
 from claw import Claw
 from statemachine import State, Transition, StateMachine
 from cross import Cross
-from dirve import Drive
+from drive import Drive
 
 
 class NekoNekoChan(object):
     def __init__(self):
         
+        self.sound = Sound()
+
        # sensor values
         self.sensLeft = ColorSensor(INPUT_1)
-        self.sensRight = ColorSensor(INPUT_4)
+        self.sensRight = ColorSensor(INPUT_4) # TODO: Sensoren anschließen
         self.sensIR = InfraredSensor(INPUT_2)
         self.sensTouch = TouchSensor(INPUT_3)
         
@@ -55,11 +57,26 @@ class NekoNekoChan(object):
             if self.btn.any():
                 break
 
-            # EmergencyStop
+            # EmergencyStop TODO: Wert für Abgrund definieren
         #    if self.sensValues["ColorLeft"] == ABGRUND or self.sensValues["ColorRight"] == ABGRUND:
         #        self.fsm.transition("toBrake")
 
             # if clauses for changing state
+
+                # calibrate sensors
+
+                # wait for button press before starting
+
+                # line following
+
+                # intersection first turn
+
+                # detect ball
+
+                # collect ball, turn around
+
+                # intersection turn = entry turn
+
 
             else:
                 self.fsm.transition("toFollowLine")

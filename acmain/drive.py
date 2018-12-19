@@ -58,7 +58,7 @@ class Drive(object):
         self.speed = 50
 
     def followLine(self, sensValues):
-        lightValue = sensValues["ColorLeft"]
+        lightValue = sensValues["ColorLeft"] # TODO: HSL? Lichtwert anpassen
         turn = self.pid.update(lightValue)
         self.steerPair.on(turn, self.speed)
     

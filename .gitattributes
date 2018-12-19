@@ -1,1 +1,1 @@
-*.txt -crlf
+text eol=lf
