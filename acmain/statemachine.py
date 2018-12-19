@@ -5,11 +5,14 @@ class StateError(Exception):
     pass
 
 class State(object):
-    def __init__(self, execFunc):
+        # exeFunction the function runs in the State,
+        # sensorValues as Dictionary
+    def __init__(self, execFunc, sensorValues):
         self.execFunc = execFunc
+        self.sensorValues = sensorValues
     
     def execute(self):
-        self.execFunc()
+        self.execFunc(self.sensorValues)
 
 
 class Transition(object):

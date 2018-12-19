@@ -42,3 +42,17 @@ class PIDController(object):
         self.errorLast = error
 
         return turn
+
+# self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
+# self.sound = Sound()
+# motors
+        # self.steerPair = MoveSteering(OUTPUT_B, OUTPUT_C)
+        # self.speed = 50
+
+# def followLine(self):
+#         lightValue = self.sensLight.reflected_light_intensity
+#         if lightValue == 0:
+#             self.steerPair.off()
+#         else:
+#             turn = self.pid.update(lightValue)
+#             self.steerPair.on(turn, self.speed)
