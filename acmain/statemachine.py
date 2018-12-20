@@ -5,21 +5,34 @@ class StateError(Exception):
     pass
 
 class State(object):
-    def __init__(self, execFunc):
+        # exeFunction the function runs in the State
+        # sensorValues as Dictionary
+    def __init__(self, execFunc = None, sensorValues = None):
         self.execFunc = execFunc
+        self.sensorValues = sensorValues
     
     def execute(self):
-        self.execFunc()
+        if self.execFunc != None:
+            self.execFunc(self.sensorValues)
 
 
 class Transition(object):
-    def __init__(self, toState):
+    def __init__(self, toState, execFunc = None, sensorValues = None):
         self.toState = toState
+        self.execFunc = execFunc
+        self.sensorValues = sensorValues
+
+    def execute(self):
+        if self.execFunc != None and self.sensorValues != None:
+            self.execFunc(self.sensorValues)
+        elif self.execFunc != None:
+            self.execFunc()
+        
 
 class StateMachine(object):
     def __init__(self):
         
-        Debug.print("Initialisiere State-Machine")
+        Debug.print("Initialize statemachine")
         self.states = {}
         self.transitions = {}
         self.currentState = None
@@ -27,12 +40,14 @@ class StateMachine(object):
 
     def setState(self, stateName):
         self.currentState = self.states[stateName]
+        Debug.print("State changed to: " + stateName)
     
     def transition(self, transName):
         self.trans = self.transitions[transName]
 
     def execute(self):
-        if self.trans:
+        if self.trans and self.currentState == self.trans.toState:
+            self.trans.execute()
             self.setState(self.trans.toState)
             self.trans = None
         self.currentState.execFunc()
