@@ -45,6 +45,10 @@ class NekoNekoChan(object):
         self.fsm.transitions["toFollowLine"] = Transition("followLine")
         self.fsm.transitions["toCrossFirstTurn"] = Transition("crossFirstTurn")
         self.fsm.transitions["toBrake"] = Transition("brake", self.drive.brake)
+
+    def checkBlue(self):
+        hue = self.sensValues[]
+        return hue > 0.4 and hue < 0.68     # TODO: measure best threshold for blue values
         
     def run(self):
         while True:
@@ -73,6 +77,8 @@ class NekoNekoChan(object):
                 # line following
 
                 # intersection first turn
+            elif self.checkBlue():
+                self.fsm.transition("crossFirstTurn")
 
                 # detect ball
 
