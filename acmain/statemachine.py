@@ -23,8 +23,11 @@ class Transition(object):
         self.sensorValues = sensorValues
 
     def execute(self):
-        if self.execFunc != None:
+        if self.execFunc != None and self.sensorValues != None:
             self.execFunc(self.sensorValues)
+        elif self.execFunc != None:
+            self.execFunc()
+        
 
 class StateMachine(object):
     def __init__(self):
@@ -43,7 +46,7 @@ class StateMachine(object):
         self.trans = self.transitions[transName]
 
     def execute(self):
-        if self.trans:
+        if self.trans and self.currentState == self.trans.toState:
             self.trans.execute()
             self.setState(self.trans.toState)
             self.trans = None
