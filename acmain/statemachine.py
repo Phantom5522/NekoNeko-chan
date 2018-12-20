@@ -7,13 +7,16 @@ class StateError(Exception):
 class State(object):
         # exeFunction the function runs in the State
         # sensorValues as Dictionary
-    def __init__(self, execFunc = None, sensorValues = None):
+    def __init__(self, name, execFunc = None, sensorValues = None):
+        self.name = name
         self.execFunc = execFunc
         self.sensorValues = sensorValues
     
     def execute(self):
-        if self.execFunc != None:
+        if self.execFunc != None and self.sensorValues != None:
             self.execFunc(self.sensorValues)
+        elif self.execFunc != None:
+            raise Exception("Function has no sensorValues")
 
 
 class Transition(object):
@@ -46,8 +49,9 @@ class StateMachine(object):
         self.trans = self.transitions[transName]
 
     def execute(self):
-        if self.trans != None and self.currentState == self.trans.toState:
+        if self.trans != None and self.currentState.name != self.trans.toState:
             self.trans.execute()
             self.setState(self.trans.toState)
             self.trans = None
-        self.currentState.execFunc()
+        self.currentState.execute()
+

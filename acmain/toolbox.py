@@ -22,5 +22,6 @@ class Config(object):
             Config.data = json.load(f)
             Config.pidFast = [Config.data['pid']['fast']['kP'], Config.data['pid']['fast']['kI'], Config.data['pid']['fast']['kD']]
             Config.pidSlow = [Config.data['pid']['slow']['kP'], Config.data['pid']['slow']['kI'], Config.data['pid']['slow']['kD']]
+            Debug.print("Config updated")
     
 
