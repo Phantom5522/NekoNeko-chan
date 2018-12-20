@@ -47,7 +47,7 @@ class NekoNekoChan(object):
         self.fsm.transitions["toBrake"] = Transition("brake", self.drive.brake)
 
     def checkBlue(self):
-        hue = self.sensValues[]
+        hue = self.sensValues["ColorLeft"][0]
         return hue > 0.4 and hue < 0.68     # TODO: measure best threshold for blue values
         
     def run(self):

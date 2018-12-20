@@ -18,7 +18,7 @@ def main():
     sleep(1)
     nchan.sensLeft.calibrate_white()
     nchan.sensRight.calibrate_white()
-    nchan.sound.tone(698, 100, 0)
+    nchan.sound.tone([(698, 100, 0)])
 
 
     nchan.sound.speak('ready')
@@ -26,7 +26,7 @@ def main():
     while not nchan.btn.any():
          sleep(0.1)
 
-    nchan.sound.tone(698, 100, 0)
+    nchan.sound.tone([(698, 100, 0)])
     sleep(1)
 
     nchan.run()
