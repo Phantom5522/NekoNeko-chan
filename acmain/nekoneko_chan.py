@@ -38,10 +38,12 @@ class NekoNekoChan(object):
         self.fsm.states["followLine"] = State(self.drive.followLine, self.sensValues)
         self.fsm.states["brake"] = State()
         self.fsm.states["crossFirstTurn"] = State(self.cross.firstTurn, self.sensValues)
+        self.fsm.states["grabBall"] = State()
         # adding Transitions
         self.fsm.transitions["toFollowLine"] = Transition("followLine")
         self.fsm.transitions["toCrossFirstTurn"] = Transition("crossFirstTurn")
         self.fsm.transitions["toBrake"] = Transition("brake", self.drive.brake)
+        self.fsm.transitions["toGrabBall"] = Transition("grabBall", self.cross.grabBall, self.sensValues)
         
     def run(self):
         while True:
