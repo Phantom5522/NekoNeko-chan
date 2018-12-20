@@ -6,7 +6,7 @@ from ev3dev2.button import Button
 from ev3dev2.sound import Sound
 
 # our custom classes
-from toolbox import Debug
+from toolbox import Debug, Config
 from claw import Claw
 from statemachine import State, Transition, StateMachine
 from cross import Cross
@@ -17,7 +17,8 @@ from toolbox import Debug
 
 class NekoNekoChan(object):
     def __init__(self):
-        
+        Config.update()
+
         self.sound = Sound()
 
        # sensor values

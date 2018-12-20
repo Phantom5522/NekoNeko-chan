@@ -1,4 +1,5 @@
 from time import sleep
+from toolbox import Config
 
 # Ev3dev classes
 from ev3dev2.motor import LargeMotor, MediumMotor, MoveSteering
@@ -10,9 +11,10 @@ from toolbox import Debug
 # PID Controller class
 class PIDController(object):
     def __init__(self, kP = 1.0, kI = 0.0, kD = 0.1):
-        self.kP = kP
-        self.kI = kI
-        self.kD = kD
+        Config.update()
+        self.kP = Config.pidFast[0]
+        self.kI = Config.pidFast[1]
+        self.kD = Config.pidFast[2]
         self.target = 30
         self.errorLast = 0
         self.errorIntegrated = 0
@@ -55,10 +57,10 @@ class Drive(object):
         
         # motors
         self.steerPair = MoveSteering(OUTPUT_B, OUTPUT_C)
-        self.speed = 50
+        self.speed = Config.data['pid']['fast']['speed_max']
 
     def followLine(self, sensValues):
-        lightValue = sensValues["ColorLeft"] # TODO: HSL? Lichtwert anpassen
+        lightValue = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
         turn = self.pid.update(lightValue)
         self.steerPair.on(turn, self.speed)
     

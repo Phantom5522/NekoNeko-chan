@@ -9,18 +9,32 @@ from toolbox import Debug
 
 def main():
     nchan = NekoNekoChan() # create object instance of robot
+    nchan.sound.tone([(523, 100, 0), (622, 100, 0), (698, 100, 0)]) # on sound
+    
+    # calibrate color sensors on white surface
+    nchan.sound.speak("Please calibrate white value")
+    while not nchan.btn.enter:
+        sleep(0.1)
+    sleep(1)
+    nchan.sensLeft.calibrate_white()
+    nchan.sensRight.calibrate_white()
+    nchan.sound.tone(698, 100, 0)
+
 
     nchan.sound.speak('ready')
-
+    # wait for button press before starting the challenge
     while not nchan.btn.any():
          sleep(0.1)
 
-    nchan.sound.beep()
+    nchan.sound.tone(698, 100, 0)
     sleep(1)
 
     nchan.run()
 
-    nchan.sound.speak('program end')
+    nchan.sound.speak('bye bye')
+
+    nchan.sound.tone([(698, 100, 0), (622, 100, 0), (523, 100, 0)]) # OFF sound
+
 
 if __name__ == '__main__':
     main()
