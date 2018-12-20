@@ -1,0 +1,19 @@
+{
+  "version": "0.0.0",
+  "pid": {
+    "fast": {
+      "kP": 3.0,
+      "kI": 0.0,
+      "kD": 0.1,
+      "speed_max": 90,
+      "speed_min": 20
+    },
+    "slow": {
+      "kP": 2.0,
+      "kI": 0.0,
+      "kD": 0.1,
+      "speed_max": 30,
+      "speed_min": 10
+    }
+  }
+}
