@@ -15,5 +15,8 @@
       "speed_max": 30,
       "speed_min": 10
     }
+  },
+  "approach": {
+    "ts_distance": 20
   }
 }
