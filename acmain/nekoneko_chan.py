@@ -70,6 +70,7 @@ class NekoNekoChan(object):
                 sleep(1)
                 if self.btn.down:
                     Config.update()
+                    self.drive.updateConfig()
                     self.sound.beep()
             if curState == None:
                 self.fsm.transition("toFollowLine")

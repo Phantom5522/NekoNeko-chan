@@ -1,4 +1,4 @@
-from time import sleep
+from time import sleep, time
 from toolbox import Config
 
 # Ev3dev classes
@@ -18,6 +18,12 @@ class PIDController(object):
         self.target = 30
         self.errorLast = 0
         self.errorIntegrated = 0
+
+    def updateConfig(self):
+        self.kP = Config.pidFast[0]
+        self.kI = Config.pidFast[1]
+        self.kD = Config.pidFast[2]
+
 
     def update(self, error):
 
@@ -57,6 +63,10 @@ class Drive(object):
         # motors
         self.steerPair = MoveSteering(OUTPUT_B, OUTPUT_C)
         self.speed = Config.data['pid']['fast']['speed_max']
+
+    def updateConfig(self):
+        self.speed = Config.data['pid']['fast']['speed_max']
+        self.pid.updateConfig()
 
     def followLine(self, sensValues):
         colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
