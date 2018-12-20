@@ -19,8 +19,7 @@ class PIDController(object):
         self.errorLast = 0
         self.errorIntegrated = 0
 
-    def update(self, lightValue):
-        error = self.target - lightValue
+    def update(self, error):
 
         self.errorIntegrated += error
 
@@ -60,8 +59,19 @@ class Drive(object):
         self.speed = Config.data['pid']['fast']['speed_max']
 
     def followLine(self, sensValues):
-        lightValue = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
-        turn = self.pid.update(lightValue)
+        colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
+        colorRight = sensValues["ColorRight"][1] 
+        error = colorLeft - colorRight
+
+        turn = self.pid.update(error)
+        self.steerPair.on(turn, self.speed)
+
+    def followLineSlow(self, speed, sensValues):
+        colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
+        colorRight = sensValues["ColorRight"][1] 
+        error = colorLeft - colorRight
+
+        turn = self.pid.update(error)
         self.steerPair.on(turn, self.speed)
     
     def brake(self):
