@@ -46,7 +46,7 @@ class StateMachine(object):
         self.trans = self.transitions[transName]
 
     def execute(self):
-        if self.trans and self.currentState == self.trans.toState:
+        if self.trans != None and self.currentState == self.trans.toState:
             self.trans.execute()
             self.setState(self.trans.toState)
             self.trans = None
