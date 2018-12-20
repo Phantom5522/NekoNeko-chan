@@ -10,7 +10,6 @@ class Cross(object):
     drive = Drive()
     drive.turn(10) # hat noch keinen Effekt
 
-
     # wenn Farbe 'blau':
         # fahre bis Mitte
         # drehe um -90Grad auf der Stelle(links)
