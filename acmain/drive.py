@@ -73,6 +73,9 @@ class Drive(object):
 
         turn = self.pid.update(error)
         self.steerPair.on(turn, self.speed)
+
+    def turn(self, degrees=0):
+        pass
     
     def brake(self):
         self.steerPair.off()
