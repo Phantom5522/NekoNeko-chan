@@ -6,16 +6,19 @@ from ev3dev2.button import Button
 from ev3dev2.sound import Sound
 
 # our custom classes
-from toolbox import Debug
+from toolbox import Debug, Config
 from claw import Claw
 from statemachine import State, Transition, StateMachine
 from cross import Cross
 from drive import Drive
 
+from toolbox import Debug
+
 
 class NekoNekoChan(object):
     def __init__(self):
-        
+        Config.update()
+
         self.sound = Sound()
 
        # sensor values
@@ -42,6 +45,10 @@ class NekoNekoChan(object):
         self.fsm.transitions["toFollowLine"] = Transition("followLine")
         self.fsm.transitions["toCrossFirstTurn"] = Transition("crossFirstTurn")
         self.fsm.transitions["toBrake"] = Transition("brake", self.drive.brake)
+
+    def checkBlue(self):
+        hue = self.sensValues["ColorLeft"][0]
+        return hue > 0.4 and hue < 0.68     # TODO: measure best threshold for blue values
         
     def run(self):
         while True:
@@ -70,6 +77,8 @@ class NekoNekoChan(object):
                 # line following
 
                 # intersection first turn
+            elif self.checkBlue():
+                self.fsm.transition("crossFirstTurn")
 
                 # detect ball
 
