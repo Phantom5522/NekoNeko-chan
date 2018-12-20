@@ -4,6 +4,7 @@ from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import ColorSensor, InfraredSensor, TouchSensor
 from ev3dev2.button import Button
 from ev3dev2.sound import Sound
+from time import sleep
 
 # our custom classes
 from toolbox import Debug, Config
@@ -63,6 +64,10 @@ class NekoNekoChan(object):
 
             if self.btn.any():
                 break
+            else:
+                self.fsm.transition("toFollowLine")
+
+                """
 
             # EmergencyStop TODO: Wert für Abgrund definieren
         #    if self.sensValues["ColorLeft"] == ABGRUND or self.sensValues["ColorRight"] == ABGRUND:
@@ -77,19 +82,19 @@ class NekoNekoChan(object):
                 # line following
 
                 # intersection first turn
-            elif self.checkBlue():
-                self.fsm.transition("crossFirstTurn")
+            # elif self.checkBlue():
+            #     self.fsm.transition("toCrossFirstTurn")
 
                 # detect ball
 
                 # collect ball, turn around
 
                 # intersection turn = entry turn
+            """
 
-
-            else:
-                self.fsm.transition("toFollowLine")
 
             
+            Debug.print(self.fsm.currentState)
             self.fsm.execute()
+            sleep(0.01)
         
