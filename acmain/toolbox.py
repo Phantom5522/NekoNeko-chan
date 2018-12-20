@@ -11,14 +11,16 @@ class Debug(object):
         print(*args, **kwargs, file=sys.stderr)
 
 class Config(object):
-    def __init__(self):
+    data = {}
+    pidFast = []
+    pidSlow = []
+
+    @staticmethod
+    def update():
         # create config if not existing
         with open('cfg/config.json') as f:
-            self.data = json.load(f)
-            self.pidFast = [self.data['pid']['fast']['kP'], self.data['pid']['fast']['kI'], self.data['pid']['fast']['kD']]
-            self.pidSlow = [self.data['pid']['slow']['kP'], self.data['pid']['slow']['kI'], self.data['pid']['slow']['kD']]
+            Config.data = json.load(f)
+            Config.pidFast = [Config.data['pid']['fast']['kP'], Config.data['pid']['fast']['kI'], Config.data['pid']['fast']['kD']]
+            Config.pidSlow = [Config.data['pid']['slow']['kP'], Config.data['pid']['slow']['kI'], Config.data['pid']['slow']['kD']]
     
-    def update(self):
-        self.__init__()
 
-cfg = Config()
