@@ -1,5 +1,6 @@
 from time import sleep, time
 from toolbox import Config
+import ev3dev2
 
 # Ev3dev classes
 from ev3dev2.motor import LargeMotor, MediumMotor, MoveSteering
@@ -53,9 +54,7 @@ class PIDController(object):
 
         self.errorLast = error
 
-
-        milliseconds = int(round(time() * 1000))
-        Debug.print(milliseconds)   # TODO: debug print
+        Debug.deltaTime("PID Update") # TODO: measure execution time
 
         return turn
 
@@ -65,7 +64,11 @@ class Drive(object):
         self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
         
         # motors
-        self.steerPair = MoveSteering(OUTPUT_B, OUTPUT_C)
+        try:
+            self.steerPair = MoveSteering(OUTPUT_B, OUTPUT_C)
+        except ev3dev2.DeviceNotFound as e:
+            Debug.print("Error:", e)
+
         self.speed = Config.data['pid']['fast']['speed_max']
 
     def updateConfig(self):
@@ -93,4 +96,15 @@ class Drive(object):
     
     def brake(self):
         self.steerPair.off()
-            
+
+
+# module test
+if __name__ == "__main__":
+    Debug.print("Drive Module Test")
+    Debug.print("="*40)
+    Debug.deltaTime("Modules loaded")
+    drive = Drive()
+    Debug.deltaTime("init drive object")
+    for i in range(10):
+        drive.pid.update(i*100)
+    
