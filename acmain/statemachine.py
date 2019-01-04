@@ -17,8 +17,7 @@ class State(object):
     def execute(self):
         if self.listFuncs != []:
             for funcAsList in self.listFuncs:
-               func = funcAsList.pop(0)
-               func(*funcAsList)
+               funcAsList[0](*funcAsList[1:])
 
 class Transition(object):
     def __init__(self, toState, listFuncs = []):
@@ -31,8 +30,8 @@ class Transition(object):
     def execute(self):
         if self.listFuncs != []:
             for funcAsList in self.listFuncs:
-               func = funcAsList.pop(0)
-               func(*funcAsList)
+                Debug.print('Transition called function:', funcAsList[0])
+                funcAsList[0](*funcAsList[1:])
         
 
 class StateMachine(object):
