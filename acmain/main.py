@@ -12,10 +12,7 @@ def main():
     nchan.sound.tone([(523, 100, 0), (622, 100, 0), (698, 100, 0)]) # on sound
     
     # calibrate color sensors on white surface
-    nchan.sound.speak("Please calibrate white value")
-    while not nchan.btn.enter:
-        sleep(0.1)
-    sleep(1)
+    nchan.sound.speak("calibrating")
     nchan.sensLeft.calibrate_white()
     nchan.sensRight.calibrate_white()
     nchan.sound.tone([(698, 100, 0)])
@@ -23,7 +20,7 @@ def main():
 
     nchan.sound.speak('ready')
     # wait for button press before starting the challenge
-    while not nchan.btn.any():
+    while not nchan.sensTouch.is_pressed:
          sleep(0.1)
 
     nchan.sound.tone([(698, 100, 0)])
