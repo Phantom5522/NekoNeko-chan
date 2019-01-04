@@ -9,34 +9,37 @@ class Cross(object):
 
     drive = Drive()
     drive.turn(10) # hat noch keinen Effekt
+    drive.steerPair.on_for_degrees()
 
-    # wenn Farbe 'blau':
+    if nchan.sensColor.calibrate_blue():
         # fahre bis Mitte
-        # drehe um -90Grad auf der Stelle(links)
-        # setze Richtung = 'links'
-        # fahre langsam geradeaus
-        # falls Farbe == 'weiß':
-            # drehe um 180Grad
+        self.turn(90)
+        Richtung = 'links'
+        self.speed = Config.data['pid']['fast']['speed_min'] # Geschwindigkeit verringern
+        self.run()
+        if nchan.sensColor.calibrate_white():
+            turn(180)
             # fahre geradeaus
-            # falls Farbe == 'blue':
+            if nchan.sensColor.calibrate_blue():
                 # fahre geradeaus
-                # falls Farbe == 'schwarz'
-                    # first turn()
-                    # folge Linie
+                if nchan.sensColor.calibrate_black():
+                    firstTurn(self)
+                    self.run()
                     # falls Hindernis:
-                    # falls turncount == 1:
+                    if turncount == 1:
                     # search()
+        
     # fahre zurück
-    # drehe um 180 Grad
+    turn(180)
     # fahre geradeaus
-    # falls Farbe == 'blau':
+    if nchan.sensColor.calibrate_blue():
         # fahre bis Mitte
-        # falls turncount = 2:
-            # wenn Richtung == 'rechts'
-            # drehe rechts um 90 Grad
-            # elif Richtung == 'links'
-            # drehe links um 90 Grad
-        # folge Linie
+        if turncount == 2:
+            if Richtung == 'rechts':
+                turn(90) # drehe rechts um 90 Grad
+            elif Richtung == 'links'
+                turn(-90) # drehe links um 90 Grad
+    self.fsm.transition("crossSecondsTurn")
         
 
     def firstTurn(self, sensorValues):
@@ -45,26 +48,26 @@ class Cross(object):
 
     def search(self):
 
-        # stoppe motor
+        brake()
         self.minAbstand = self.sensIR.proximity
-        # solange Abstand < Wert:
-            # drehe nach rechts
-            # falls (Abstand < minAbstand)
-                # so lange wie (Abstand < minAbstand):
-                    # minAbstand = Abstand
-            # sonst:
-                # drehe nach links
-                # falls (Abstand < minAbstand):
-                    # so lange wie (Abstand < minAbstand):
-                        # minAbstand = Abstand
+        while(Abstand < Wert):
+            turn(90) # drehe nach rechts
+            if(Abstand < minAbstand):
+                while(Abstand < minAbstand):
+                    minAbstand = Abstand
+            elif:
+                turn(-90) # drehe nach links
+                if(Abstand < minAbstand):
+                    while(Abstand < minAbstand):
+                        minAbstand = Abstand
             # verringere Geschwindigkeit
             # fahre für 3 Sekunden
         # grab()
-        # setze turncount = 2
+        turncount = 2
 
     def grab():
-        # öffne Greifarm
-        # solange TouchButton = kein Signal:
-            # fahre langsam auf Ball zu
-        # wenn TouchButton == Signal:
-            # Greifarm schließen
+        self.releaseClaw()
+        while sensTouch.is_pressed
+            self.run()
+        if sensTouch.is_pressed:
+            self.closeClaw()
