@@ -45,7 +45,7 @@ class NekoNekoChan(object):
         self.fsm.states["brake"] = State("brake")
         
         self.fsm.states["crossFirstTurn"] = State("crossFirstTurn")
-        # self.fsm.states["crossFirstTurn"].addFunc(self.cross.firstTurn, self.sensValues)
+        self.fsm.states["crossFirstTurn"].addFunc(self.cross.firstTurn, self.sensValues)
 
         self.fsm.states["checkNextExit"] = State("checkNextExit")
         self.fsm.states["checkNextExit"].addFunc(self.drive.followLine, self.sensValues)
