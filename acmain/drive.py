@@ -1,4 +1,5 @@
-from time import sleep
+from time import sleep, time
+from toolbox import Config
 
 # Ev3dev classes
 from ev3dev2.motor import LargeMotor, MediumMotor, MoveSteering
@@ -10,15 +11,21 @@ from toolbox import Debug
 # PID Controller class
 class PIDController(object):
     def __init__(self, kP = 1.0, kI = 0.0, kD = 0.1):
-        self.kP = kP
-        self.kI = kI
-        self.kD = kD
+        Config.update()
+        self.kP = Config.pidFast[0]
+        self.kI = Config.pidFast[1]
+        self.kD = Config.pidFast[2]
         self.target = 30
         self.errorLast = 0
         self.errorIntegrated = 0
 
-    def update(self, lightValue):
-        error = self.target - lightValue
+    def updateConfig(self):
+        self.kP = Config.pidFast[0]
+        self.kI = Config.pidFast[1]
+        self.kD = Config.pidFast[2]
+
+
+    def update(self, error):
 
         self.errorIntegrated += error
 
@@ -46,6 +53,10 @@ class PIDController(object):
 
         self.errorLast = error
 
+
+        milliseconds = int(round(time() * 1000))
+        Debug.print(milliseconds)   # TODO: debug print
+
         return turn
 
 # Class for all movement actions
@@ -55,12 +66,30 @@ class Drive(object):
         
         # motors
         self.steerPair = MoveSteering(OUTPUT_B, OUTPUT_C)
-        self.speed = 50
+        self.speed = Config.data['pid']['fast']['speed_max']
+
+    def updateConfig(self):
+        self.speed = Config.data['pid']['fast']['speed_max']
+        self.pid.updateConfig()
 
     def followLine(self, sensValues):
-        lightValue = sensValues["ColorLeft"] # TODO: HSL? Lichtwert anpassen
-        turn = self.pid.update(lightValue)
+        colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
+        colorRight = sensValues["ColorRight"][1] 
+        error = colorLeft - colorRight
+
+        turn = self.pid.update(error)
         self.steerPair.on(turn, self.speed)
+
+    def followLineSlow(self, speed, sensValues):
+        colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
+        colorRight = sensValues["ColorRight"][1] 
+        error = colorLeft - colorRight
+
+        turn = self.pid.update(error)
+        self.steerPair.on(turn, self.speed)
+
+    def turn(self, degrees=0):
+        pass
     
     def brake(self):
         self.steerPair.off()

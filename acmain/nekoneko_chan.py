@@ -4,18 +4,22 @@ from ev3dev2.sensor import INPUT_1, INPUT_2, INPUT_3, INPUT_4
 from ev3dev2.sensor.lego import ColorSensor, InfraredSensor, TouchSensor
 from ev3dev2.button import Button
 from ev3dev2.sound import Sound
+from time import sleep
 
 # our custom classes
-from toolbox import Debug
+from toolbox import Debug, Config
 from claw import Claw
 from statemachine import State, Transition, StateMachine
 from cross import Cross
 from drive import Drive
 
+from toolbox import Debug
+
 
 class NekoNekoChan(object):
     def __init__(self):
-        
+        Config.update()
+
         self.sound = Sound()
 
        # sensor values
@@ -35,15 +39,21 @@ class NekoNekoChan(object):
         # statemachine
         self.fsm = StateMachine()
         # adding States
-        self.fsm.states["followLine"] = State(self.drive.followLine, self.sensValues)
-        self.fsm.states["brake"] = State()
-        self.fsm.states["crossFirstTurn"] = State(self.cross.firstTurn, self.sensValues)
+        self.fsm.states["followLine"] = State("followLine", self.drive.followLine, self.sensValues)
+        self.fsm.states["brake"] = State("brake")
+        self.fsm.states["crossFirstTurn"] = State("crossFirstTurn", self.cross.firstTurn, self.sensValues)
         # adding Transitions
         self.fsm.transitions["toFollowLine"] = Transition("followLine")
-        self.fsm.transitions["toCrossFirstTurn"] = Transition("crossFirstTurn")
         self.fsm.transitions["toBrake"] = Transition("brake", self.drive.brake)
+        self.fsm.transitions["toCrossFirstTurn"] = Transition("crossFirstTurn")
+
+    def checkBlue(self):
+        hue = self.sensValues["ColorLeft"][0]
+        return hue > 0.4 and hue < 0.68     # TODO: measure best threshold for blue values
         
     def run(self):
+
+        self.fsm.setState("followLine")
         while True:
             # update sensor values
             self.sensValues["ColorLeft"] = self.sensLeft.hls
@@ -54,8 +64,24 @@ class NekoNekoChan(object):
             # copy current State
             curState = self.fsm.currentState
 
-            if self.btn.any():
+            #Debug.print(self.sensValues["ColorLeft"], self.sensValues["ColorRight"]) # TODO: find Lightness thresholds
+
+            if self.btn.down:
+                sleep(1)
+                if self.btn.down:
+                    Config.update()
+                    self.drive.updateConfig()
+                    self.sound.beep()
+            if curState == None:
+                self.fsm.transition("toFollowLine")
+            elif self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
+                self.fsm.transition("toBrake")
+            elif self.btn.any():
                 break
+            elif curState.name != "followLine":
+                self.fsm.transition("toFollowLine")
+
+                """
 
             # EmergencyStop TODO: Wert für Abgrund definieren
         #    if self.sensValues["ColorLeft"] == ABGRUND or self.sensValues["ColorRight"] == ABGRUND:
@@ -70,17 +96,18 @@ class NekoNekoChan(object):
                 # line following
 
                 # intersection first turn
+            # elif self.checkBlue():
+            #     self.fsm.transition("toCrossFirstTurn")
 
                 # detect ball
 
                 # collect ball, turn around
 
                 # intersection turn = entry turn
+            """
 
-
-            else:
-                self.fsm.transition("toFollowLine")
 
             
             self.fsm.execute()
+            sleep(0.01)
         
