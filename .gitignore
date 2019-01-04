@@ -3,6 +3,7 @@
 
 # Project related files
 acmain/cfg/config.json
+acmain/test.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
