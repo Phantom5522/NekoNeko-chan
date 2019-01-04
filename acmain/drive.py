@@ -54,8 +54,8 @@ class PIDController(object):
         self.errorLast = error
 
 
-        milliseconds = int(round(time() * 1000))
-        Debug.print(milliseconds)   # TODO: debug print
+        # milliseconds = int(round(time() * 1000))
+        # Debug.print(milliseconds)   # TODO: debug print
 
         return turn
 
