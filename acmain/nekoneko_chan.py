@@ -45,7 +45,7 @@ class NekoNekoChan(object):
         self.fsm.states["brake"] = State("brake")
         
         self.fsm.states["crossFirstTurn"] = State("crossFirstTurn")
-        self.fsm.states["crossFirstTurn"].addFunc(self.cross.firstTurn, self.sensValues)
+        # self.fsm.states["crossFirstTurn"].addFunc(self.cross.firstTurn, self.sensValues)
 
         self.fsm.states["checkNextExit"] = State("checkNextExit")
         self.fsm.states["checkNextExit"].addFunc(self.drive.followLine, self.sensValues)
@@ -83,39 +83,16 @@ class NekoNekoChan(object):
                     Config.update()
                     self.drive.updateConfig()
                     self.sound.beep()
+            elif self.btn.any():
+                break
+            
             if curState == None:
                 self.fsm.transition("toFollowLine")
             elif self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
                 self.fsm.transition("toBrake")
-            elif self.btn.any():
-                break
             elif curState.name != "followLine":
                 self.fsm.transition("toFollowLine")
 
-                """
-
-            # EmergencyStop TODO: Wert für Abgrund definieren
-        #    if self.sensValues["ColorLeft"] == ABGRUND or self.sensValues["ColorRight"] == ABGRUND:
-        #        self.fsm.transition("toBrake")
-
-            # if clauses for changing state
-
-                # calibrate sensors
-
-                # wait for button press before starting
-
-                # line following
-
-                # intersection first turn
-            # elif self.checkBlue():
-            #     self.fsm.transition("toCrossFirstTurn")
-
-                # detect ball
-
-                # collect ball, turn around
-
-                # intersection turn = entry turn
-            """
 
 
             
