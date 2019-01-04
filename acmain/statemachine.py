@@ -7,29 +7,32 @@ class StateError(Exception):
 class State(object):
         # exeFunction the function runs in the State
         # sensorValues as Dictionary
-    def __init__(self, name, execFunc = None, sensorValues = None):
+    def __init__(self, name, listFuncs = []):
         self.name = name
-        self.execFunc = execFunc
-        self.sensorValues = sensorValues
-    
-    def execute(self):
-        if self.execFunc != None and self.sensorValues != None:
-            self.execFunc(self.sensorValues)
-        elif self.execFunc != None:
-            raise Exception("Function has no sensorValues")
+        self.listFuncs = listFuncs
 
+    def addFunc(self, funcName, *parameters):
+        self.listFuncs.append([funcName,*parameters])
+
+    def execute(self):
+        if self.listFuncs != []:
+            for funcAsList in self.listFuncs:
+               func = funcAsList.pop(0)
+               func(*funcAsList)
 
 class Transition(object):
-    def __init__(self, toState, execFunc = None, sensorValues = None):
+    def __init__(self, toState, listFuncs = []):
         self.toState = toState
-        self.execFunc = execFunc
-        self.sensorValues = sensorValues
+        self.listFuncs = listFuncs
+
+    def addFunc(self, funcName, *parameters):
+        self.listFuncs.append([funcName,*parameters])
 
     def execute(self):
-        if self.execFunc != None and self.sensorValues != None:
-            self.execFunc(self.sensorValues)
-        elif self.execFunc != None:
-            self.execFunc()
+        if self.listFuncs != []:
+            for funcAsList in self.listFuncs:
+               func = funcAsList.pop(0)
+               func(*funcAsList)
         
 
 class StateMachine(object):
