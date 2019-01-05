@@ -54,8 +54,8 @@ class PIDController(object):
         self.errorLast = error
 
 
-        milliseconds = int(round(time() * 1000))
-        Debug.print(milliseconds)   # TODO: debug print
+        # milliseconds = int(round(time() * 1000))
+        # Debug.print(milliseconds)   # TODO: debug print
 
         return turn
 
@@ -73,6 +73,7 @@ class Drive(object):
         self.pid.updateConfig()
 
     def followLine(self, sensValues):
+        Debug.print('execute drive.followLine()')
         colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
         colorRight = sensValues["ColorRight"][1] 
         error = colorLeft - colorRight
@@ -92,5 +93,6 @@ class Drive(object):
         pass
     
     def brake(self):
+        # Debug.print('Emergency Stop: low reflection')
         self.steerPair.off()
             

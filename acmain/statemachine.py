@@ -7,23 +7,23 @@ class StateError(Exception):
 class State(object):
         # exeFunction the function runs in the State
         # sensorValues as Dictionary
-    def __init__(self, name, listFuncs = []):
+    def __init__(self, name):
         self.name = name
-        self.listFuncs = listFuncs
+        self.listFuncs = list()
 
     def addFunc(self, funcName, *parameters):
         self.listFuncs.append([funcName,*parameters])
 
     def execute(self):
         if self.listFuncs != []:
+            Debug.print('State: {} called {}'.format(self.name, self.listFuncs))
             for funcAsList in self.listFuncs:
-               func = funcAsList.pop(0)
-               func(*funcAsList)
+               funcAsList[0](*funcAsList[1:])
 
 class Transition(object):
-    def __init__(self, toState, listFuncs = []):
+    def __init__(self, toState):
         self.toState = toState
-        self.listFuncs = listFuncs
+        self.listFuncs = list()
 
     def addFunc(self, funcName, *parameters):
         self.listFuncs.append([funcName,*parameters])
@@ -31,8 +31,8 @@ class Transition(object):
     def execute(self):
         if self.listFuncs != []:
             for funcAsList in self.listFuncs:
-               func = funcAsList.pop(0)
-               func(*funcAsList)
+                Debug.print('Transition called function:', funcAsList[0])
+                funcAsList[0](*funcAsList[1:])
         
 
 class StateMachine(object):
