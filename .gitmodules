@@ -1,3 +1,0 @@
-[submodule "acmain/ivPID"]
-	path = acmain/ivPID
-	url = git://github.com/schuub/ivPID.git
