@@ -30,6 +30,7 @@ class Transition(object):
 
     def addFunc(self, funcName, *parameters):
         self.listFuncs.append([funcName,*parameters])
+        return self
 
     def execute(self):
         if self.listFuncs != []:

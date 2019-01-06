@@ -51,9 +51,9 @@ class NekoNekoChan(object):
         self.fsm.addState("findBall").addFunc(self.drive.followLine, self.sensValues)
         self.fsm.getState("findBall").addFunc(self.cross.updateDistance)
         self.fsm.addState("backToCross").addFunc(self.drive.followLine, self.sensValues)
-        self.fsm.addState("approachBall").addFunc(self.drive.followLineSlow)
+        self.fsm.addState("approachBall").addFunc(self.drive.followLineSlow, self.sensValues)
         # in state diagramm only named exit
-        self.fsm.addState("exitCross").addFunc(self.drive.followLine)
+        self.fsm.addState("exitCross").addFunc(self.drive.followLine, self.sensValues)
         
 
         # adding Transitions
@@ -63,19 +63,20 @@ class NekoNekoChan(object):
         self.fsm.addTransition("brake").addFunc(self.drive.brake)
 
             # Cross Transitions
-        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw)
-        self.fsm.getTransition("toCheckNextExitStartCross").addFunc(self.cross.turn, "right")
-        self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.cross.turn, "skip")
-        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.cross.turn, "right")
-        self.fsm.getTransition("toCheckNextExitDeadEnd").addFunc(self.cross.updateTTE)
+        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw).addFunc(self.cross.turn, "right")
+        self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.cross.turn, "skip")          
+        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.cross.turn, "right").addFunc(self.cross.updateTTE)
+
         self.fsm.addTransition("findBall").addFunc(self.cross.resetDistance)
+
         self.fsm.addTransition("followLine","exitCrossFromKown")
         self.fsm.addTransition("followLine","exitCrossFromUnkown")
-        self.fsm.addTransition("backToCross","withoutBall").addFunc(self.cross.turn, "180")
-        self.fsm.getTransition("toBackToCrossWithoutBall").addFunc(self.cross.setTTE)
-        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw, True)
-        self.fsm.getTransition("toBackToCrossWithBall").addFunc(self.cross.turn, "180")
+
+        self.fsm.addTransition("backToCross","withoutBall").addFunc(self.cross.turn, "180").addFunc(self.cross.setTTE)
+        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw, True).addFunc(self.cross.turn, "180")
+
         self.fsm.addTransition("approachBall")
+
         self.fsm.addTransition("exitCross", "left").addFunc(self.cross.turn, "left")
         self.fsm.addTransition("exitCross", "straight")
 
