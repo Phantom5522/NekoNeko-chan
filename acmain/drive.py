@@ -1,6 +1,7 @@
 from time import sleep, time
 from toolbox import Config
 import ev3dev2
+import PID
 
 # Ev3dev classes
 from ev3dev2.motor import LargeMotor, MediumMotor, MoveSteering
@@ -8,6 +9,9 @@ from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
 
 # custom classes
 from toolbox import Debug
+
+class wrappedPID(PID.PID):
+    pass
 
 # PID Controller class
 class PIDController(object):
@@ -54,7 +58,7 @@ class PIDController(object):
 
         self.errorLast = error
 
-        Debug.deltaTime("PID Update") # TODO: measure execution time
+        # Debug.deltaTime("PID Update") # TODO: measure execution time
 
         return turn
 
@@ -105,6 +109,11 @@ if __name__ == "__main__":
     Debug.deltaTime("Modules loaded")
     drive = Drive()
     Debug.deltaTime("init drive object")
-    for i in range(10):
-        drive.pid.update(i*100)
+    # for i in range(10):
+    #     drive.pid.update(i*100)
+    newPID = wrappedPID()
+    Debug.deltaTime("init ivPID object")
+    # newPID.update(10)
+    Debug.print(newPID.sample_time)
+
     
