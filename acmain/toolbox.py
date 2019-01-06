@@ -19,9 +19,9 @@ class Debug(object):
         print(*args, **kwargs, file=sys.stderr)
 
 class Config(object):
-    data = {}
-    pidFast = []
-    pidSlow = []
+    data = dict()
+    pidFast = list()
+    pidSlow = list()
 
     @staticmethod
     def update():
