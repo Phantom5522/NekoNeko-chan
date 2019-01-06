@@ -36,31 +36,58 @@ class NekoNekoChan(object):
         # Classes for features
         self.drive = Drive()
         self.cross = Cross()
+        self.claw = Claw()
         # statemachine
         self.fsm = StateMachine()
+       
         # adding States
-        self.fsm.states["followLine"] = State("followLine")
-        self.fsm.states["followLine"].addFunc(self.drive.followLine, self.sensValues)
         
-        self.fsm.states["brake"] = State("brake")
+            # Normal Mode States
+        self.fsm.addState("followLine").addFunc(self.drive.followLine, self.sensValues)
+        self.fsm.addState("brake")
 
-        self.fsm.states["checkNextExit"] = State("checkNextExit")
-        self.fsm.states["checkNextExit"].addFunc(self.drive.followLine, self.sensValues)
+            # Cross States
+        self.fsm.addState("checkNextExit").addFunc(self.drive.followLine, self.sensValues)
+        self.fsm.addState("findBall").addFunc(self.drive.followLine, self.sensValues)
+        self.fsm.getState("findBall").addFunc(self.cross.updateDistance)
+        self.fsm.addState("backToCross").addFunc(self.drive.followLine, self.sensValues)
+        self.fsm.addState("approachBall").addFunc(self.drive.followLineSlow)
+        # in state diagramm only named exit
+        self.fsm.addState("exitCross").addFunc(self.drive.followLine)
         
 
         # adding Transitions
-        self.fsm.transitions["toFollowLine"] = Transition("followLine")
-        
-        self.fsm.transitions["toBrake"] = Transition("brake")
-        self.fsm.transitions["toBrake"].addFunc(self.drive.brake)
 
+            # Normal Mode Transitions
+        self.fsm.addTransition("followLine")
+        self.fsm.addTransition("brake").addFunc(self.drive.brake)
 
+            # Cross Transitions
+        self.fsm.addTransition("checkNextExit","StartCross").addFunc(self.claw.releaseClaw)
+        self.fsm.getTransition("toCheckNextExitStartCross").addFunc(self.cross.turn, "right")
+        self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.cross.turn, "skip")
+        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.cross.turn, "right")
+        self.fsm.getTransition("toCheckNextExitDeadEnd").addFunc(self.cross.updateTTE)
+        self.fsm.addTransition("findBall").addFunc(self.cross.resetDistance)
+        self.fsm.addTransition("followLine","exitCrossFromKown")
+        self.fsm.addTransition("followLine","exitCrossFromUnkown")
+        self.fsm.addTransition("backToCross","withoutBall").addFunc(self.cross.turn, "180")
+        self.fsm.getTransition("toBackToCrossWithoutBall").addFunc(self.cross.setTTE)
+        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw)
+        self.fsm.getTransition("toBackToCrossWithBall").addFunc(self.cross.turn, "180")
+        self.fsm.addTransition("approachBall")
+        self.fsm.addTransition("exitCross", "left").addFunc(self.cross.turn, "left")
+        self.fsm.addTransition("exitCross", "straight")
+
+        '''
         Debug.print('States:')
         for state in self.fsm.states:
             Debug.print(self.fsm.states[state].name)
         Debug.print('Transitions:')
         for trans in self.fsm.transitions:
             Debug.print(self.fsm.transitions[trans].toState)
+
+        '''
 
     def checkBlue(self):
         hue = self.sensValues["ColorLeft"][0]
