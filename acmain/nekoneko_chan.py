@@ -73,7 +73,7 @@ class NekoNekoChan(object):
         self.fsm.addTransition("followLine","exitCrossFromUnkown")
         self.fsm.addTransition("backToCross","withoutBall").addFunc(self.cross.turn, "180")
         self.fsm.getTransition("toBackToCrossWithoutBall").addFunc(self.cross.setTTE)
-        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw)
+        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw, Truee)
         self.fsm.getTransition("toBackToCrossWithBall").addFunc(self.cross.turn, "180")
         self.fsm.addTransition("approachBall")
         self.fsm.addTransition("exitCross", "left").addFunc(self.cross.turn, "left")
@@ -89,9 +89,21 @@ class NekoNekoChan(object):
 
         '''
 
-    def checkBlue(self):
-        hue = self.sensValues["ColorLeft"][0]
-        return hue > 0.4 and hue < 0.68     # TODO: measure best threshold for blue values
+    def checkNoBlue(self):
+        hueLeft = self.sensValues["ColorLeft"][0]
+        hueRight = self.sensValues["ColorRight"][0]
+        return hueLeft < 0.4 and hueLeft > 0.68 and hueRight < 0.4 and hueRight > 0.68
+
+    # implement luminaceValues
+    def checkHalfBlue(self):
+        hueLeft = self.sensValues["ColorLeft"][0]
+        hueRight = self.sensValues["ColorRight"][0]
+        return (hueLeft > 0.4 and hueLeft < 0.68) or (hueRight > 0.4 and hueRight < 0.68)    # TODO: measure best threshold for blue values
+
+    def checkWhite(self):
+        luminanceLeft = self.sensValues["ColorLeft"][1]
+        luminanceRight = self.sensValues["ColorRight"][1]
+        return luminanceLeft > 200 and luminanceRight > 200   # TODO: measure best threshold for blue values
         
     def run(self):
 
@@ -116,20 +128,41 @@ class NekoNekoChan(object):
                     self.sound.beep()
             elif self.btn.any():
                 break
+
             
             if curState == "followLine":
-                
-            
+                if self.checkHalfBlue():
+                    self.fsm.transition("toCheckNextExitStartCross")
+            elif curState == "checkNextExit":
+                if self.checkWhite():
+                    self.fsm.transition("toCheckNextExitDeadEnd")
+                elif self.checkWhite() == False and self.checkNoBlue():
+                    self.fsm.transition("toFindBall")
+            elif curState == "findBall":
+                if self.claw.hasBall == 1: #A
+                    self.fsm.transition("toFollowLineExitCrossFromUnkown")
+                elif self.cross.distance < 20: #B TODO: value for thr
+                    self.fsm.transition("toBackToCrossWithoutBall")
+                elif self.sensValues["IR"] < 80: # TODO: value for thr
+                    self.fsm.transition("toApproachBall")
+            elif curState == "approachBall":
+                if self.sensValues["Touch"]:
+                    self.fsm.transition("toBackToCrossWithBall")
+            elif curState == "backToCross":
+                if self.checkHalfBlue() and self.claw.hasBall: # 1
+                    if self.cross.turnsToExit == 1:
+                        self.fsm.transition("toExitCrossLeft")
+                    elif self.cross.turnsToExit == 2
+                        self.fsm.transition("toExitCrossStraight")
+                elif self.checkHalfBlue(): # 2
+                    self.fsm.transition("toCheckNextExitBackToCross")
+            elif curState == "exitCross":
+                if self.checkWhite() == False and self.checkNoBlue():
+                    self.fsm.transition("toFollowLineExitCrossFromKown")
+
+            # From any State
             if self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
                 self.fsm.transition("toBrake")
-            elif curState == "followLine" and (self.sensValues["ColorLeft"] == "blue" or self.sensValues["ColorRight"] == "blue"): # TODO: What is blue
-                self.fsm.transition("toCheckNextExitStartCross")
-            elif curState == "checkNextExit" and (self.sensValues["ColorLeft"] == "white" or self.sensValues["ColorRight"] == "white") # TODO: What is white
-                self.fsm.transition("toCheckNextExitStartCross")
-            elif curState.name != "followLine":
-                self.fsm.transition("toFollowLine")
-
-
 
             
             self.fsm.execute()
