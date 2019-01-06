@@ -1,5 +1,6 @@
 {
     "files.eol": "\n",
-    "ev3devBrowser.download.exclude": "{**/.*,LICENSE,README.md}",
+    "ev3devBrowser.download.exclude": "{**/.*,LICENSE,README.md,ivPID/*}",
+    "ev3devBrowser.download.include": "{ivPID/PID.py}",
     "python.pythonPath": "python"
 }
