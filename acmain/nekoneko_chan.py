@@ -117,15 +117,18 @@ class NekoNekoChan(object):
             elif self.btn.any():
                 break
             
-            if curState != "brake" and self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
-                self.fsm.transition("toBrake")
-            elif curState == "followLine" and (self.sensValues["ColorLeft"] == "blue" or self.sensValues["ColorRight"] == "blue"): # TODO: What is blue
-                self.fsm.transition("toCheckNextExitStartCross")
-            elif curState == "checkNextExit" and (self.sensValues["ColorLeft"] == "white" or self.sensValues["ColorRight"] == "white") # TODO: What is white
-                self.fsm.transition("toCheckNextExitStartCross")
+            if self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
+                self.fsm.addTransitionPossibility("toBrake")
+            if self.sensValues["ColorLeft"] == "blue" or self.sensValues["ColorRight"] == "blue": # TODO: What is blue
+                self.fsm.addTransitionPossibility("toCheckNextExitStartCross")
+            if self.sensValues["ColorLeft"] == "white" or self.sensValues["ColorRight"] == "white": # TODO: What is white
+                self.fsm.addTransitionPossibility("toCheckNextExitStartCross")
+            if self.sensValues["ColorLeft"] == "black" or self.sensValues["ColorRight"] == "black": # TODO: What is black
+                self.fsm.addTransitionPossibility("toFindBall")
+            if self.claw.hasBall: #A
             
-            elif curState.name != "followLine":
-                self.fsm.transition("toFollowLine")
+            if curState.name != "followLine":
+                self.fsm.addTransitionPossibility("toFollowLine")
 
 
 
