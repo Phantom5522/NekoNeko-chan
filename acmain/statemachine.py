@@ -1,7 +1,10 @@
 # Finite State Machine
 from toolbox import Debug
 
-class StateError(Exception):
+class StateExistError(Exception):
+    pass
+
+class TransitionExistError(Exception):
     pass
 
 class State(object):
@@ -16,7 +19,7 @@ class State(object):
 
     def execute(self):
         if self.listFuncs != []:
-            Debug.print('State: {} called {}'.format(self.name, self.listFuncs))
+            #Debug.print('State: {} called {}'.format(self.name, self.listFuncs))
             for funcAsList in self.listFuncs:
                funcAsList[0](*funcAsList[1:])
 
@@ -43,6 +46,29 @@ class StateMachine(object):
         self.transitions = {}
         self.currentState = None
         self.trans = None
+
+    def addState(self, stateName):
+       
+        if self.states.__contains__(stateName) == True:
+            raise StateExistError("This State name exist already")
+        
+        self.states[stateName] = State(stateName)
+        return self.states[stateName]
+
+    def getState(self, stateName):
+        return self.states[stateName]
+
+    def addTransition(self, toState, nameExtension = ""):
+        transitionName = "to" + toState[0].upper() + toState[1:] + nameExtension[0].upper() + nameExtension[1:]
+        
+        if self.transitions.__contains__(transitionName) == True:
+            raise TransitionExistError("This transition name exist already. Use the nameExtension parameter for the transitions to the same State!")
+        
+        self.transitions[transitionName] = Transition(toState)
+        return self.transitions[transitionName]
+
+    def getTransition(self, transitionName):
+        return self.transitions[transitionName]
 
     def setState(self, stateName):
         self.currentState = self.states[stateName]
