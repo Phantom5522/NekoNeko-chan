@@ -63,21 +63,21 @@ class NekoNekoChan(object):
         self.fsm.addTransition("brake").addFunc(self.drive.brake)
 
             # Cross Transitions
-        self.fsm.addTransition("followLine","checkNextExit","startCross").addFunc(self.claw.releaseClaw)
+        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw)
         self.fsm.getTransition("toCheckNextExitStartCross").addFunc(self.cross.turn, "right")
-        self.fsm.addTransition("checkNextExit","checkNextExit","deadEnd").addFunc(self.cross.turn, "skip")
-        self.fsm.addTransition("backToCross","checkNextExit","backToCross").addFunc(self.cross.turn, "right")
+        self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.cross.turn, "skip")
+        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.cross.turn, "right")
         self.fsm.getTransition("toCheckNextExitDeadEnd").addFunc(self.cross.updateTTE)
-        self.fsm.addTransition("checkNextExit","findBall").addFunc(self.cross.resetDistance)
-        self.fsm.addTransition("exitCross","followLine","exitCrossFromKown")
-        self.fsm.addTransition("findBall","followLine","exitCrossFromUnkown")
-        self.fsm.addTransition("findBall","backToCross","withoutBall").addFunc(self.cross.turn, "180")
+        self.fsm.addTransition("findBall").addFunc(self.cross.resetDistance)
+        self.fsm.addTransition("followLine","exitCrossFromKown")
+        self.fsm.addTransition("followLine","exitCrossFromUnkown")
+        self.fsm.addTransition("backToCross","withoutBall").addFunc(self.cross.turn, "180")
         self.fsm.getTransition("toBackToCrossWithoutBall").addFunc(self.cross.setTTE)
-        self.fsm.addTransition("approachBall","backToCross","withBall").addFunc(self.claw.closeClaw)
+        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw)
         self.fsm.getTransition("toBackToCrossWithBall").addFunc(self.cross.turn, "180")
-        self.fsm.addTransition("findBall","approachBall")
-        self.fsm.addTransition("backToCross","exitCross", "left").addFunc(self.cross.turn, "left")
-        self.fsm.addTransition("backToCross","exitCross", "straight")
+        self.fsm.addTransition("approachBall")
+        self.fsm.addTransition("exitCross", "left").addFunc(self.cross.turn, "left")
+        self.fsm.addTransition("exitCross", "straight")
 
         '''
         Debug.print('States:')
@@ -119,6 +119,10 @@ class NekoNekoChan(object):
             
             if self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
                 self.fsm.transition("toBrake")
+            elif curState == "followLine" and (self.sensValues["ColorLeft"] == "blue" or self.sensValues["ColorRight"] == "blue"): # TODO: What is blue
+                self.fsm.transition("toCheckNextExitStartCross")
+            elif curState == "checkNextExit" and (self.sensValues["ColorLeft"] == "white" or self.sensValues["ColorRight"] == "white") # TODO: What is white
+                self.fsm.transition("toCheckNextExitStartCross")
             elif curState.name != "followLine":
                 self.fsm.transition("toFollowLine")
 

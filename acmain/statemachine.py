@@ -24,8 +24,7 @@ class State(object):
                funcAsList[0](*funcAsList[1:])
 
 class Transition(object):
-    def __init__(self, fromState, toState):
-        self.fromState = fromState
+    def __init__(self, toState):
         self.toState = toState
         self.listFuncs = list()
 
@@ -59,13 +58,13 @@ class StateMachine(object):
     def getState(self, stateName):
         return self.states[stateName]
 
-    def addTransition(self, fromState, toState, nameExtension = ""):
+    def addTransition(self, toState, nameExtension = ""):
         transitionName = "to" + toState[0].upper() + toState[1:] + nameExtension[0].upper() + nameExtension[1:]
         
         if self.transitions.__contains__(transitionName) == True:
             raise TransitionExistError("This transition name exist already. Use the nameExtension parameter for the transitions to the same State!")
         
-        self.transitions[transitionName] = Transition(fromState, toState)
+        self.transitions[transitionName] = Transition(toState)
         return self.transitions[transitionName]
 
     def getTransition(self, transitionName):
@@ -79,7 +78,7 @@ class StateMachine(object):
         self.trans = self.transitions[transName]
 
     def execute(self):
-        if self.trans != None and (self.trans.fromState == self.currentState or self.trans.fromState == self.trans.toState or self.trans.fromState == "anyState"): #TODO: gibt es Probleme nach der Änderung?
+        if self.trans != None and self.currentState.name != self.trans.toState:
             self.trans.execute()
             self.setState(self.trans.toState)
             self.trans = None
