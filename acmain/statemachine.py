@@ -46,7 +46,7 @@ class StateMachine(object):
         self.states = {}
         self.transitions = {}
         self.currentState = None
-        self.trans = None
+        self.trans = list()
 
     def addState(self, stateName):
        
@@ -75,13 +75,15 @@ class StateMachine(object):
         self.currentState = self.states[stateName]
         Debug.print("State changed to: " + stateName)
     
-    def transition(self, transName):
-        self.trans = self.transitions[transName]
+    def addTransitionPossibility(self, transName):
+        self.trans.append(self.transitions[transName])
 
     def execute(self):
-        if self.trans != None and (self.trans.fromState == self.currentState or self.trans.fromState == self.trans.toState or self.trans.fromState == "anyState"): #TODO: gibt es Probleme nach der Änderung?
-            self.trans.execute()
-            self.setState(self.trans.toState)
-            self.trans = None
+        if len(self.trans) > 0:
+            for transElement in self.trans:
+                if transElement.fromState == self.currentState or transElement.fromState == transElement.toState or transElement.fromState == "anyState":
+                    transElement.execute()
+                    self.setState(transElement.toState)
+        self.trans.clear()
         self.currentState.execute()
 
