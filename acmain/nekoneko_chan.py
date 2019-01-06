@@ -117,8 +117,13 @@ class NekoNekoChan(object):
             elif self.btn.any():
                 break
             
-            if self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
+            if curState != "brake" and self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
                 self.fsm.transition("toBrake")
+            elif curState == "followLine" and (self.sensValues["ColorLeft"] == "blue" or self.sensValues["ColorRight"] == "blue"): # TODO: What is blue
+                self.fsm.transition("toCheckNextExitStartCross")
+            elif curState == "checkNextExit" and (self.sensValues["ColorLeft"] == "white" or self.sensValues["ColorRight"] == "white") # TODO: What is white
+                self.fsm.transition("toCheckNextExitStartCross")
+            
             elif curState.name != "followLine":
                 self.fsm.transition("toFollowLine")
 
