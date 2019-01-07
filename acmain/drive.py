@@ -11,7 +11,16 @@ from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
 from toolbox import Debug
 
 class wrappedPID(PID.PID):
-    pass
+    def __init__(self, kP = 1.0, kI = 0.0, kD = 0.1):
+        super(wrappedPID, self).__init__(kP, kI, kD)
+        Config.update()
+        self.setKp(Config.pidFast[0])
+        self.setKi(Config.pidFast[1])
+        self.setKd(Config.pidFast[2])
+        self.SetPoint = 0.0
+        self.setSampleTime = 0.02       # 50 Hz
+
+
 
 # PID Controller class
 class PIDController(object):
@@ -111,9 +120,11 @@ if __name__ == "__main__":
     Debug.deltaTime("init drive object")
     # for i in range(10):
     #     drive.pid.update(i*100)
+
+    Config.update()
+
     newPID = wrappedPID()
     Debug.deltaTime("init ivPID object")
     # newPID.update(10)
-    Debug.print(newPID.sample_time)
-
+    Debug.print("Sample time:", newPID.sample_time, "\nK PID:", newPID.Kp, newPID.Ki, newPID.Kd)
     
