@@ -103,6 +103,9 @@ class NekoNekoChan(object):
         luminanceLeft = self.sensValues["ColorLeft"][1]
         luminanceRight = self.sensValues["ColorRight"][1]
         return luminanceLeft > 200 and luminanceRight > 200   # TODO: measure best threshold for blue values
+    def checkBlue(self):
+        hue = self.sensValues["ColorLeft"][0]
+        return hue > 0.4 and hue < 0.68     # TODO: measure best threshold for blue values
         
     def run(self):
 
@@ -125,6 +128,10 @@ class NekoNekoChan(object):
                     Config.update()
                     self.drive.updateConfig()
                     self.sound.beep()
+            if curState == None:
+                self.fsm.transition("toFollowLine")
+            elif self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
+                self.fsm.transition("toBrake")
             elif self.btn.any():
                 break
 

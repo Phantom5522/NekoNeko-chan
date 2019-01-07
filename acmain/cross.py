@@ -6,10 +6,12 @@ class Cross(object):
         self.turnsToExit = 0
 
     def updateDistance(self):
+        #while self.sensIR.proximity > #optWert:
+        #    self.drive.followLine
         pass
 
     def resetDistance(self):
-        pass
+        self.distance = 0
 
     def setTTE(self):
         self.turnsToExit = 1

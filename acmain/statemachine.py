@@ -10,9 +10,9 @@ class TransitionExistError(Exception):
 class State(object):
         # exeFunction the function runs in the State
         # sensorValues as Dictionary
-    def __init__(self, name):
+    def __init__(self, name, listFuncs = []):
         self.name = name
-        self.listFuncs = list()
+        self.listFuncs = listFuncs
 
     def addFunc(self, funcName, *parameters):
         self.listFuncs.append([funcName,*parameters])
@@ -21,12 +21,13 @@ class State(object):
         if self.listFuncs != []:
             #Debug.print('State: {} called {}'.format(self.name, self.listFuncs))
             for funcAsList in self.listFuncs:
-               funcAsList[0](*funcAsList[1:])
+               func = funcAsList.pop(0)
+               func(*funcAsList)
 
 class Transition(object):
-    def __init__(self, toState):
+    def __init__(self, toState, listFuncs = []):
         self.toState = toState
-        self.listFuncs = list()
+        self.listFuncs = listFuncs
 
     def addFunc(self, funcName, *parameters):
         self.listFuncs.append([funcName,*parameters])
