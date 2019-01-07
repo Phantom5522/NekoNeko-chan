@@ -83,6 +83,8 @@ class Drive(object):
 
         self.steerPair.on(turn, self.speed)
 
+    def turn(self, direction):
+        pass
     def turn(self, action):
         def right():
             self.steerPair.on_for_degrees(-100, 20, 200)
@@ -105,6 +107,9 @@ class Drive(object):
     def brake(self):
         self.steerPair.off()
 
+    def driveMillimeters(self, millimeters):
+        self.steerPair.on_for_degrees(0, 20, -1.95*millimeters)
+            
 
 # module test
 if __name__ == "__main__":
