@@ -20,8 +20,8 @@ sensTouch = TouchSensor(INPUT_3)
 
 steerPair = MoveSteering(OUTPUT_B, OUTPUT_C)
 
-# sensLeft.calibrate_white()
-# sensRight.calibrate_white()
+sensLeft.calibrate_white()
+sensRight.calibrate_white()
 
 Debug.print("Calibrated White")
 
@@ -31,7 +31,7 @@ maxHue = 0
 minLuminance = 500
 maxLuminance = 0
 minSaturation = 500
-maxSaturation = 0
+maxSaturation = -500
 
 # # 90°
 # sleep(2)
@@ -44,20 +44,20 @@ maxSaturation = 0
 # sleep(2)
 # steerPair.on_for_degrees(100, 20, 735)
 
-drive = Drive()
+# drive = Drive()
 
 while True:
 
-    if sensTouch.is_pressed:
-        sleep(2)
-        # steerPair.on_for_degrees(0, 20, -97*6)
-        drive.driveMillimeters(100)
-        steerPair.on_for_degrees(-100, 20, 377)
-        drive.driveMillimeters(500)
+    # if sensTouch.is_pressed:
+    #     sleep(2)
+    #     # steerPair.on_for_degrees(0, 20, -97*6)
+    #     drive.driveMillimeters(100)
+    #     steerPair.on_for_degrees(-100, 20, 377)
+    #     drive.driveMillimeters(500)
 
     '''
     Debug.print("IR Proximity:", sensIR.proximity)
-
+    '''
     if sensTouch.is_pressed and not measure:
         Debug.print("Active")
         measure = True
@@ -78,7 +78,7 @@ while True:
         minLuminance = 500
         maxLuminance = 0
         minSaturation = 500
-        maxSaturation = 0
+        maxSaturation = -500
 
         sleep(1)
 
@@ -102,6 +102,6 @@ while True:
         
         if sensValue[2] < minSaturation:
             minSaturation = sensValue[2]
-        '''
+        
 
     sleep(0.25)
