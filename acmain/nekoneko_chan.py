@@ -146,7 +146,7 @@ class NekoNekoChan(object):
                     self.fsm.transition("toFollowLineExitCrossFromUnkown")
                 elif self.cross.distance < 20: #B TODO: value for thr
                     self.fsm.transition("toBackToCrossWithoutBall")
-                elif self.sensValues["IR"] < 80: # TODO: value for thr
+                elif self.sensValues["IR"] < 70: # TODO: 70%
                     self.fsm.transition("toApproachBall")
             elif curState == "approachBall":
                 if self.sensValues["Touch"]:

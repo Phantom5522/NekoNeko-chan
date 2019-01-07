@@ -95,4 +95,7 @@ class Drive(object):
     def brake(self):
         # Debug.print('Emergency Stop: low reflection')
         self.steerPair.off()
+
+    def driveCentimeters(self, centimeters):
+        self.steerPair.on_for_degrees(0, 20, -19.5*centimeters)
             
