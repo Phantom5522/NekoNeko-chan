@@ -30,6 +30,7 @@ class Drive(object):
 
     def __init__(self):
         self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
+        self.largeMotor = LargeMotor(OUTPUT_B)
         
         # motors
         try:
@@ -83,13 +84,11 @@ class Drive(object):
 
         self.steerPair.on(turn, self.speed)
 
-    def turn(self, direction):
-        pass
     def turn(self, action):
         def right():
-            self.steerPair.on_for_degrees(-100, 20, 200)
+            self.steerPair.on_for_degrees(-100, 20, 377)
         def left():
-            self.steerPair.on_for_degrees(100, 20, 200)
+            self.steerPair.on_for_degrees(100, 20, 377)
 
         if action == "right":
             right()
@@ -109,7 +108,10 @@ class Drive(object):
 
     def driveMillimeters(self, millimeters):
         self.steerPair.on_for_degrees(0, 20, -1.95*millimeters)
-            
+
+    def resetDistance(self):
+        self.distance = 0
+        self.largeMotor.position = 0
 
 # module test
 if __name__ == "__main__":

@@ -47,7 +47,6 @@ class NekoNekoChan(object):
             # Cross States
         self.fsm.addState("checkNextExit").addFunc(self.drive.followLine, self.sensValues)
         self.fsm.addState("findBall").addFunc(self.drive.followLine, self.sensValues)
-        self.fsm.getState("findBall").addFunc(self.cross.updateDistance)
         self.fsm.addState("backToCross").addFunc(self.drive.followLine, self.sensValues)
         self.fsm.addState("approachBall").addFunc(self.drive.followLineSlow, self.sensValues)
         # in state diagramm only named exit
@@ -65,7 +64,7 @@ class NekoNekoChan(object):
         self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.drive.turn, "skip")          
         self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.drive.turn, "right").addFunc(self.cross.updateTTE)
 
-        self.fsm.addTransition("findBall").addFunc(self.cross.resetDistance)
+        self.fsm.addTransition("findBall").addFunc(self.drive.resetDistance)
 
         self.fsm.addTransition("followLine","exitCrossFromKown")
         self.fsm.addTransition("followLine","exitCrossFromUnkown")
@@ -151,7 +150,7 @@ class NekoNekoChan(object):
             elif curState == "findBall":
                 if self.claw.hasBall == 1: #A
                     self.fsm.transition("toFollowLineExitCrossFromUnkown")
-                elif self.cross.distance < 20: #B TODO: value for thr
+                elif self.drive.largeMotor.position < -1000: #B TODO: value for thr
                     self.fsm.transition("toBackToCrossWithoutBall")
                 elif self.sensValues["IR"] < 70: # TODO: 70%
                     self.fsm.transition("toApproachBall")
