@@ -1,7 +1,4 @@
 from toolbox import Debug
-from claw import Claw
-from statemachine import State, Transition, StateMachine
-from drive import Drive
 
 class Cross(object):
 
@@ -120,3 +117,5 @@ def weiterFahrt:
             self.run()
         if sensTouch.is_pressed:
             self.closeClaw()
+    def firstTurn(self, sensorValues):
+        Debug.print("Robo at Cross first Turn")
