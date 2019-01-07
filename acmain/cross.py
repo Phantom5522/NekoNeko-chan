@@ -5,5 +5,15 @@ class Cross(object):
         self.distance = 0
         self.turnsToExit = 0
 
-    def firstTurn(self, sensorValues):
-        Debug.print("Robo at Cross first Turn")
+    def updateDistance(self):
+        pass
+
+    def resetDistance(self):
+        pass
+
+    def setTTE(self):
+        self.turnsToExit = 1
+
+    def updateTTE(self):
+        if self.turnsToExit > 0:
+            self.turnsToExit += 1

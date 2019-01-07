@@ -60,7 +60,9 @@ class StateMachine(object):
         return self.states[stateName]
 
     def addTransition(self, toState, nameExtension = ""):
-        transitionName = "to" + toState[0].upper() + toState[1:] + nameExtension[0].upper() + nameExtension[1:]
+        transitionName = "to" + toState[0].upper() + toState[1:]
+        if nameExtension != "":
+            transitionName += nameExtension[0].upper() + nameExtension[1:]
         
         if self.transitions.__contains__(transitionName) == True:
             raise TransitionExistError("This transition name exist already. Use the nameExtension parameter for the transitions to the same State!")
