@@ -91,12 +91,13 @@ class Drive(object):
             self.steerPair.on_for_degrees(100, 20, 377)
 
         if action == "right":
+            self.driveMillimeters(100)
             right()
+
         elif action == "left":
+            self.driveMillimeters(100)
             left()
         elif action == "skip":
-            self.steerPair.on_for_degrees(0, -20, 50)     # back off until centered on cross
-            self.steerPair.wait_until_not_moving(2000)
             left()
         else:
             raise AttributeError("no valid action string given for turn()")
