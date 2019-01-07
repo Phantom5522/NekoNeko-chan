@@ -28,7 +28,7 @@ def main():
     nchan.sound.tone([(698, 100, 0)])
     sleep(1)
 
-    nchan.claw.closeClaw()
+    # nchan.claw.closeClaw()
     nchan.run()
 
     nchan.sound.speak('bye bye')
