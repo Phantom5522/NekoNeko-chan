@@ -59,7 +59,7 @@ class Drive(object):
         self.pid.update(feedback)
         turn = self.pid.output
 
-        if abs(turn) > 5:
+        if abs(turn) > 10:
             self.speed = Config.pidFastSpeedMin
         elif self.speed < Config.pidFastSpeedMax:
             self.speed = self.speed + 1
