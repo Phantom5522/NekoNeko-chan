@@ -26,6 +26,8 @@ class PIDController(PID.PID):
 
 # Class for all movement actions
 class Drive(object):
+    speed = 0.0
+
     def __init__(self):
         self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
         
@@ -35,7 +37,7 @@ class Drive(object):
         except ev3dev2.DeviceNotFound as e:
             Debug.print("Error:", e)
 
-        self.speed = Config.data['pid']['fast']['speed_max']
+        # self.speed = Config.data['pid']['fast']['speed_max']
 
     def updateConfig(self):
         self.speed = Config.data['pid']['fast']['speed_max']
@@ -45,18 +47,18 @@ class Drive(object):
         colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
         colorRight = sensValues["ColorRight"][1] 
         feedback = colorLeft - colorRight
-        speed = self.speed
 
         self.pid.update(feedback)
         turn = self.pid.output
+
+        if turn > 5:
+            self.speed = Config.pidFastSpeedMin
+        elif self.speed < Config.pidFastSpeedMax:
+            self.speed += 0.2
+        
+
         Debug.print("PID output:", turn)
-        error = abs(turn*2)-100
-        if error > 0:
-            speed += (error)
-        if speed > -10:
-            speed = -10
-        Debug.print("Error:", error)
-        Debug.print("Speed:", speed)
+        Debug.print("Speed:", self.speed)
 
         if turn > 100:
             turn = 100
