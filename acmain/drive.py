@@ -89,6 +89,8 @@ class Drive(object):
             self.steerPair.on_for_degrees(-100, 20, 377)
         def left():
             self.steerPair.on_for_degrees(100, 20, 377)
+        def reverse():
+            self.steerPair.on_for_degrees(100, 20, 735)
 
         if action == "right":
             self.driveMillimeters(100)
@@ -99,6 +101,8 @@ class Drive(object):
             left()
         elif action == "skip":
             left()
+        elif action == "180":
+            reverse()
         else:
             raise AttributeError("no valid action string given for turn()")
             
