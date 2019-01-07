@@ -1,10 +1,10 @@
 from toolbox import Debug
-from claw import Claw
-from statemachine import State, Transition, StateMachine
-from drive import Drive
 
 class Cross(object):
-
+    def __init__(self):
+        self.distance = 0
+        self.turnsToExit = 0
+# Ariane
     drive = Drive()
     drive.turn(10) # hat noch keinen Effekt
     drive.steerPair.on_for_degrees()
@@ -120,3 +120,18 @@ def weiterFahrt:
             self.run()
         if sensTouch.is_pressed:
             self.closeClaw()
+   
+   # Finn-Mathis
+
+    def updateDistance(self):
+        pass
+
+    def resetDistance(self):
+        pass
+
+    def setTTE(self):
+        self.turnsToExit = 1
+
+    def updateTTE(self):
+        if self.turnsToExit > 0:
+            self.turnsToExit += 1
