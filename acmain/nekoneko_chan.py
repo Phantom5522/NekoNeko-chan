@@ -88,9 +88,7 @@ class NekoNekoChan(object):
         '''
 
     def checkNoBlue(self):
-        hueLeft = self.sensValues["ColorLeft"][0]
-        hueRight = self.sensValues["ColorRight"][0]
-        return hueLeft < 0.4 and hueLeft > 0.68 and hueRight < 0.4 and hueRight > 0.68
+        return not (self.checkHalfBlue or self.checkBlue)
 
     # implement luminaceValues
     def checkHalfBlue(self):
