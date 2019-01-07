@@ -26,7 +26,7 @@ class PIDController(PID.PID):
 
 # Class for all movement actions
 class Drive(object):
-    speed = 0.0
+    speed = 10.0
 
     def __init__(self):
         self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
@@ -83,13 +83,13 @@ class Drive(object):
         feedback = colorLeft - colorRight
 
         self.pid.update(feedback)
-        turn = self.pid.output * -1
+        turn = self.pid.output
         if turn > 100:
             turn = 100
         elif turn < -100:
             turn = -100
 
-        self.steerPair.on(turn, self.speed)
+        self.steerPair.on(-turn, -self.speed)
 
     def turn(self, action, sensValues = None):
         def enterCross():

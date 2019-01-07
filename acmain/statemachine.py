@@ -81,7 +81,9 @@ class StateMachine(object):
         self.trans = self.transitions[transName]
 
     def execute(self):
+        Debug.print("Execute State: {}".format(self.currentState.name))
         if self.trans != None:
+            Debug.print("Trans: ", self.trans.toState)
             self.trans.execute()
             self.setState(self.trans.toState)
             self.trans = None

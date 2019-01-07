@@ -96,7 +96,7 @@ class NekoNekoChan(object):
         hueRight = self.sensValues["ColorRight"][0]
         lumaLeft = self.sensValues["ColorLeft"][1]
         lumaRight = self.sensValues["ColorRight"][1]
-        return (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 150 and lumaLeft < 190) or (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 150 and lumaRight < 190)    # TODO: measure best threshold for blue values
+        return (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 150 and lumaLeft < 190) and (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 150 and lumaRight < 190)    # TODO: measure best threshold for blue values
 
     def checkWhite(self):
         luminanceLeft = self.sensValues["ColorLeft"][1]
@@ -130,12 +130,13 @@ class NekoNekoChan(object):
                 break
 
             # Normal Mode
-            elif curState == "brake" and not (self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0):
+            if curState == "brake" and not (self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0):
                 self.fsm.transition("toFollowLine")
             
             # cross
             if curState == "followLine":
                 if self.checkHalfBlue():
+                    Debug.print("Detected Half-Blue")
                     self.fsm.transition("toCheckNextExitStartCross")
             elif curState == "checkNextExit":
                 if self.checkWhite():

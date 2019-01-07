@@ -69,39 +69,40 @@ while True:
         
         measure = False
         
-        Debug.print("Min Hue:", minHue, "Max Hue:", maxHue)
-        Debug.print("Min Luminance:", minLuminance, "Max Luminance", maxLuminance)
-        Debug.print("Min Saturation: ", minSaturation, "Max Saturation", maxSaturation)
+        # Debug.print("Min Hue:", minHue, "Max Hue:", maxHue)
+        # Debug.print("Min Luminance:", minLuminance, "Max Luminance", maxLuminance)
+        # Debug.print("Min Saturation: ", minSaturation, "Max Saturation", maxSaturation)
 
-        minHue = 500
-        maxHue = 0
-        minLuminance = 500
-        maxLuminance = 0
-        minSaturation = 500
-        maxSaturation = -500
+        # minHue = 500
+        # maxHue = 0
+        # minLuminance = 500
+        # maxLuminance = 0
+        # minSaturation = 500
+        # maxSaturation = -500
 
         sleep(1)
 
     if measure:
         sensValue = sensLeft.hls
+        Debug.print("H: {}\tL: {}\tS: {}".format(*sensValue))
         
-        if sensValue[0] > maxHue:
-            maxHue = sensValue[0]
+        # if sensValue[0] > maxHue:
+        #     maxHue = sensValue[0]
         
-        if sensValue[0] < minHue:
-            minHue = sensValue[0]
+        # if sensValue[0] < minHue:
+        #     minHue = sensValue[0]
 
-        if sensValue[1] > maxLuminance:
-            maxLuminance = sensValue[1]
+        # if sensValue[1] > maxLuminance:
+        #     maxLuminance = sensValue[1]
         
-        if sensValue[1] < minLuminance:
-            minLuminance = sensValue[1]
+        # if sensValue[1] < minLuminance:
+        #     minLuminance = sensValue[1]
 
-        if sensValue[2] > maxSaturation:
-            maxSaturation = sensValue[2]
+        # if sensValue[2] > maxSaturation:
+        #     maxSaturation = sensValue[2]
         
-        if sensValue[2] < minSaturation:
-            minSaturation = sensValue[2]
+        # if sensValue[2] < minSaturation:
+        #     minSaturation = sensValue[2]
         
 
     sleep(0.25)
