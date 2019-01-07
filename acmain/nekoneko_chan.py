@@ -126,10 +126,6 @@ class NekoNekoChan(object):
                     Config.update()
                     self.drive.updateConfig()
                     self.sound.beep()
-            if curState == None:
-                self.fsm.transition("toFollowLine")
-            elif self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
-                self.fsm.transition("toBrake")
             elif self.btn.any():
                 break
 
