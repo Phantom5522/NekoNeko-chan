@@ -51,13 +51,13 @@ class Drive(object):
         self.pid.update(feedback)
         turn = self.pid.output
 
-        if turn > 5:
+        if abs(turn) > 5:
             self.speed = Config.pidFastSpeedMin
         elif self.speed < Config.pidFastSpeedMax:
-            self.speed += 0.2
+            self.speed = self.speed + 1
         
 
-        Debug.print("PID output:", turn)
+        Debug.print("PID output:", round(turn, 1))
         Debug.print("Speed:", self.speed)
 
         if turn > 100:
@@ -67,7 +67,7 @@ class Drive(object):
 
         
 
-        self.steerPair.on(-turn, self.speed)
+        self.steerPair.on(-turn, -self.speed)
 
     def followLineSlow(self, speed, sensValues):
         colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
