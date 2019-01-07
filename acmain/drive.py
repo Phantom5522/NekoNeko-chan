@@ -60,7 +60,12 @@ class Drive(object):
         self.steerPair.on(turn, self.speed)
 
     def turn(self, degrees=0):
-        pass
+        if abs(degrees) > 90:
+            raise ValueError("Degrees must be within -90 to 90")
+        else:
+            steering = degrees / 90 * 50
+
+        self.steerPair.on_for_degrees(steering, 20, 200)
     
     def brake(self):
         self.steerPair.off()
