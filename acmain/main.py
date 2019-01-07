@@ -14,7 +14,7 @@ def main():
     
     # calibrate color sensors on white surface
     # nchan.sound.speak("calibrating")
-    nchan.sound.tone(Tones.zelda)
+    # nchan.sound.tone(Tones.zelda)
     nchan.sensLeft.calibrate_white()
     nchan.sensRight.calibrate_white()
     nchan.sound.tone([(698, 100, 0)])
