@@ -108,7 +108,9 @@ class NekoNekoChan(object):
     def checkWhite(self):
         luminanceLeft = self.sensValues["ColorLeft"][1]
         luminanceRight = self.sensValues["ColorRight"][1]
-        return luminanceLeft > 200 and luminanceRight > 200   # TODO: measure best threshold for blue values
+        satLeft = self.sensValues["ColorLeft"][2]
+        satRight = self.sensValues["ColorRight"][2]
+        return (luminanceLeft > 210 and satLeft > -0.1) and (luminanceRight > 210 and satRight > -0.1)   # TODO: measure best threshold for blue values
         
     def run(self):
 
