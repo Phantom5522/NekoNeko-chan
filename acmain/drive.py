@@ -59,13 +59,24 @@ class Drive(object):
         turn = self.pid.output
         self.steerPair.on(turn, self.speed)
 
-    def turn(self, degrees=0):
-        if abs(degrees) > 90:
-            raise ValueError("Degrees must be within -90 to 90")
-        else:
-            steering = degrees / 90 * 50
+    def turn(self, action):
+        def right():
+            self.steerPair.on_for_degrees(-100, 20, 200)
+        def left():
+            self.steerPair.on_for_degrees(100, 20, 200)
 
-        self.steerPair.on_for_degrees(steering, 20, 200)
+        if action == "right":
+            right()
+        elif action == "left":
+            left()
+        elif action == "skip":
+            self.steerPair.on_for_degrees(0, -20, 50)     # back off until centered on cross
+            self.steerPair.wait_until_not_moving(2000)
+            left()
+        else:
+            raise AttributeError("no valid action string given for turn()")
+            
+
     
     def brake(self):
         self.steerPair.off()
