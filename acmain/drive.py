@@ -10,66 +10,19 @@ from ev3dev2.motor import OUTPUT_A, OUTPUT_B, OUTPUT_C
 # custom classes
 from toolbox import Debug
 
-class wrappedPID(PID.PID):
+# Class for PID Controller
+class PIDController(PID.PID):
     def __init__(self, kP = 1.0, kI = 0.0, kD = 0.1):
-        super(wrappedPID, self).__init__(kP, kI, kD)
+        super(PIDController, self).__init__(kP, kI, kD)
         Config.update()
-        self.setKp(Config.pidFast[0])
-        self.setKi(Config.pidFast[1])
-        self.setKd(Config.pidFast[2])
+        self.updateConfig()
         self.SetPoint = 0.0
-        self.setSampleTime = 0.02       # 50 Hz
-
-
-
-# PID Controller class
-class PIDController(object):
-    def __init__(self, kP = 1.0, kI = 0.0, kD = 0.1):
-        Config.update()
-        self.kP = Config.pidFast[0]
-        self.kI = Config.pidFast[1]
-        self.kD = Config.pidFast[2]
-        self.target = 30
-        self.errorLast = 0
-        self.errorIntegrated = 0
+        self.setSampleTime(0.02)    # 0.02s -> 50 Hz refresh rate
 
     def updateConfig(self):
-        self.kP = Config.pidFast[0]
-        self.kI = Config.pidFast[1]
-        self.kD = Config.pidFast[2]
-
-
-    def update(self, error):
-
-        self.errorIntegrated += error
-
-        derivative = error - self.errorLast
-
-        # limit integral
-        if self.errorIntegrated > 200:
-            self.errorIntegrated = 200
-        elif self.errorIntegrated < -200:
-            self.errorIntegrated = -200
-
-        # apply gains
-        proportional = error * self.kP
-        integral = self.errorIntegrated * self.kI
-        derivative *= self.kD
-
-        # calculate turn value
-        turn = proportional + integral + derivative
-
-        # limit turn value
-        if turn > 100:
-            turn = 100
-        elif turn < -100:
-            turn = -100
-
-        self.errorLast = error
-
-        # Debug.deltaTime("PID Update") # TODO: measure execution time
-
-        return turn
+        self.setKp(Config.pidFast[0])
+        self.setKi(Config.pidFast[1])
+        self.setKd(Config.pidFast[2])    
 
 # Class for all movement actions
 class Drive(object):
@@ -91,17 +44,19 @@ class Drive(object):
     def followLine(self, sensValues):
         colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
         colorRight = sensValues["ColorRight"][1] 
-        error = colorLeft - colorRight
+        feedback = colorLeft - colorRight
 
-        turn = self.pid.update(error)
+        self.pid.update(feedback)
+        turn = self.pid.output
         self.steerPair.on(turn, self.speed)
 
     def followLineSlow(self, speed, sensValues):
         colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
         colorRight = sensValues["ColorRight"][1] 
-        error = colorLeft - colorRight
+        feedback = colorLeft - colorRight
 
-        turn = self.pid.update(error)
+        self.pid.update(feedback)
+        turn = self.pid.output
         self.steerPair.on(turn, self.speed)
 
     def turn(self, degrees=0):
@@ -118,13 +73,12 @@ if __name__ == "__main__":
     Debug.deltaTime("Modules loaded")
     drive = Drive()
     Debug.deltaTime("init drive object")
-    # for i in range(10):
-    #     drive.pid.update(i*100)
 
     Config.update()
 
-    newPID = wrappedPID()
-    Debug.deltaTime("init ivPID object")
-    # newPID.update(10)
-    Debug.print("Sample time:", newPID.sample_time, "\nK PID:", newPID.Kp, newPID.Ki, newPID.Kd)
+    for i in range(-5, 5):
+        drive.pid.update(i*10)
+        sleep(0.03)
+        Debug.print(drive.pid.output)
+
     
