@@ -40,6 +40,13 @@ class Drive(object):
 
         # self.speed = Config.data['pid']['fast']['speed_max']
 
+    def checkBlue(self, sensValues):
+        hueLeft = sensValues["ColorLeft"][0]
+        hueRight = sensValues["ColorRight"][0]
+        lumaLeft = sensValues["ColorLeft"][1]
+        lumaRight = sensValues["ColorRight"][1]
+        return (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 80 and lumaLeft < 160) and (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 80 and lumaRight < 160)    # TODO: measure best threshold for blue values
+
     def updateConfig(self):
         self.speed = Config.data['pid']['fast']['speed_max']
         self.pid.updateConfig()
@@ -84,7 +91,11 @@ class Drive(object):
 
         self.steerPair.on(turn, self.speed)
 
-    def turn(self, action):
+    def turn(self, action, sensValues = None):
+        def enterCross():
+            while not self.checkBlue(sensValues):
+                self.followLineSlow(10, sensValues)
+
         def right():
             self.steerPair.on_for_degrees(-100, 20, 377)
         def left():
@@ -93,15 +104,18 @@ class Drive(object):
             self.steerPair.on_for_degrees(100, 20, 735)
 
         if action == "right":
+            enterCross()
             self.driveMillimeters(100)
             right()
 
         elif action == "left":
+            enterCross()
             self.driveMillimeters(100)
             left()
         elif action == "skip":
             left()
         elif action == "180":
+            self.driveMillimeters(200)
             reverse()
         else:
             raise AttributeError("no valid action string given for turn()")

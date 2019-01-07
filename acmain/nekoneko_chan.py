@@ -60,9 +60,9 @@ class NekoNekoChan(object):
         self.fsm.addTransition("brake").addFunc(self.drive.brake)
 
             # Cross Transitions
-        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw).addFunc(self.drive.turn, "right")
+        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw).addFunc(self.drive.turn, "right", self.sensValues)
         self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.drive.turn, "skip")          
-        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.drive.turn, "right").addFunc(self.cross.updateTTE)
+        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.drive.turn, "right", self.sensValues).addFunc(self.cross.updateTTE)
 
         self.fsm.addTransition("findBall").addFunc(self.drive.resetDistance)
 
@@ -74,7 +74,7 @@ class NekoNekoChan(object):
 
         self.fsm.addTransition("approachBall")
 
-        self.fsm.addTransition("exitCross", "left").addFunc(self.drive.turn, "left")
+        self.fsm.addTransition("exitCross", "left").addFunc(self.drive.turn, "left", self.sensValues)
         self.fsm.addTransition("exitCross", "straight")
 
         '''
@@ -88,7 +88,7 @@ class NekoNekoChan(object):
         '''
 
     def checkNoBlue(self):
-        return not (self.checkHalfBlue or self.checkBlue)
+        return not (self.checkHalfBlue() or self.drive.checkBlue(self.sensValues))
 
     # implement luminaceValues
     def checkHalfBlue(self):
@@ -97,13 +97,6 @@ class NekoNekoChan(object):
         lumaLeft = self.sensValues["ColorLeft"][1]
         lumaRight = self.sensValues["ColorRight"][1]
         return (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 150 and lumaLeft < 190) or (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 150 and lumaRight < 190)    # TODO: measure best threshold for blue values
-
-    def checkBlue(self):
-        hueLeft = self.sensValues["ColorLeft"][0]
-        hueRight = self.sensValues["ColorRight"][0]
-        lumaLeft = self.sensValues["ColorLeft"][1]
-        lumaRight = self.sensValues["ColorRight"][1]
-        return (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 80 and lumaLeft < 160) and (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 80 and lumaRight < 160)    # TODO: measure best threshold for blue values
 
     def checkWhite(self):
         luminanceLeft = self.sensValues["ColorLeft"][1]
