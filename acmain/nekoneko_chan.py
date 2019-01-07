@@ -13,8 +13,6 @@ from statemachine import State, Transition, StateMachine
 from cross import Cross
 from drive import Drive
 
-from toolbox import Debug
-
 
 class NekoNekoChan(object):
     def __init__(self):
@@ -99,7 +97,7 @@ class NekoNekoChan(object):
     def checkHalfBlue(self):
         hueLeft = self.sensValues["ColorLeft"][0]
         hueRight = self.sensValues["ColorRight"][0]
-        return (hueLeft > 0.4 and hueLeft < 0.68) or (hueRight > 0.4 and hueRight < 0.68)    # TODO: measure best threshold for blue values
+        return (hueLeft > 0.5 and hueLeft < 0.68) or (hueRight > 0.5 and hueRight < 0.68)    # TODO: measure best threshold for blue values
 
     def checkWhite(self):
         luminanceLeft = self.sensValues["ColorLeft"][1]
@@ -117,7 +115,7 @@ class NekoNekoChan(object):
             self.sensValues["Touch"] = self.sensTouch.is_pressed
 
             # copy current State
-            curState = self.fsm.currentState
+            curState = self.fsm.currentState.name
 
             #Debug.print(self.sensValues["ColorLeft"], self.sensValues["ColorRight"]) # TODO: find Lightness thresholds
 
@@ -130,6 +128,9 @@ class NekoNekoChan(object):
             elif self.btn.any():
                 break
 
+            # Normal Mode
+            elif curState == "brake" and not (self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0):
+                self.fsm.transition("toFollowLine")
             
             # cross
             if curState == "followLine":
@@ -163,10 +164,8 @@ class NekoNekoChan(object):
                     self.fsm.transition("toFollowLineExitCrossFromKown")
 
             # From any State
-            if curState != "brake" and (self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0):
+            if curState != "brake" and self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
                 self.fsm.transition("toBrake")
-            if curState != "followLine" and self.fsm.trans == None:
-                self.fsm.transition("toFollowLine")
             
             self.fsm.execute()
             sleep(0.01)

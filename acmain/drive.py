@@ -73,7 +73,7 @@ class Drive(object):
         self.pid.updateConfig()
 
     def followLine(self, sensValues):
-        Debug.print('execute drive.followLine()')
+        #Debug.print('execute drive.followLine()')
         colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
         colorRight = sensValues["ColorRight"][1] 
         error = colorLeft - colorRight

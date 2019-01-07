@@ -35,7 +35,7 @@ class Transition(object):
     def execute(self):
         if self.listFuncs != []:
             for funcAsList in self.listFuncs:
-                Debug.print('Transition called function:', funcAsList[0])
+                #Debug.print('Transition called function:', funcAsList[0])
                 funcAsList[0](*funcAsList[1:])
         
 
