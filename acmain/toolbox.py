@@ -19,9 +19,15 @@ class Debug(object):
         print(*args, **kwargs, file=sys.stderr)
 
 class Config(object):
-    data = {}
-    pidFast = []
-    pidSlow = []
+    data = dict()
+
+    pidFast = list()
+    pidFastSpeedMax = int()
+    pidFastSpeedMin = int()
+
+    pidSlow = list()
+    pidSlowSpeedMax = int()
+    pidSlowSpeedMin = int()
 
     @staticmethod
     def update():
@@ -29,6 +35,10 @@ class Config(object):
         with open('cfg/config.json') as f:
             Config.data = json.load(f)
             Config.pidFast = [Config.data['pid']['fast']['kP'], Config.data['pid']['fast']['kI'], Config.data['pid']['fast']['kD']]
+            Config.pidFastSpeedMax = Config.data['pid']['fast']['speed_max']
+            Config.pidFastSpeedMin = Config.data['pid']['fast']['speed_min']
+            Config.pidSlowSpeedMax = Config.data['pid']['slow']['speed_max']
+            Config.pidSlowSpeedMin = Config.data['pid']['slow']['speed_min']
             Config.pidSlow = [Config.data['pid']['slow']['kP'], Config.data['pid']['slow']['kI'], Config.data['pid']['slow']['kD']]
             Debug.print("Config updated")
     
@@ -41,3 +51,7 @@ if __name__ == "__main__":
     Debug.deltaTime("Time of Debug.print")
     sleep(1)
     Debug.deltaTime("Sleep one second")
+    Config.update()
+    Debug.deltaTime("Config was read from file")
+    Debug.print(Config.pidFastSpeedMax)
+

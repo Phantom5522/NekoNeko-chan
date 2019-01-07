@@ -105,6 +105,9 @@ class NekoNekoChan(object):
         luminanceLeft = self.sensValues["ColorLeft"][1]
         luminanceRight = self.sensValues["ColorRight"][1]
         return luminanceLeft > 200 and luminanceRight > 200   # TODO: measure best threshold for blue values
+    def checkBlue(self):
+        hue = self.sensValues["ColorLeft"][0]
+        return hue > 0.4 and hue < 0.68     # TODO: measure best threshold for blue values
         
     def run(self):
 
@@ -127,6 +130,10 @@ class NekoNekoChan(object):
                     Config.update()
                     self.drive.updateConfig()
                     self.sound.beep()
+            if curState == None:
+                self.fsm.transition("toFollowLine")
+            elif self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0:
+                self.fsm.transition("toBrake")
             elif self.btn.any():
                 break
 
@@ -167,6 +174,35 @@ class NekoNekoChan(object):
                 self.fsm.transition("toBrake")
             if curState != "followLine" and self.fsm.trans == None:
                 self.fsm.transition("toFollowLine")
+            elif curState.name != "followLine":
+                self.fsm.transition("toFollowLine")
+
+                """
+
+            # EmergencyStop TODO: Wert für Abgrund definieren
+        #    if self.sensValues["ColorLeft"] == ABGRUND or self.sensValues["ColorRight"] == ABGRUND:
+        #        self.fsm.transition("toBrake")
+
+            # if clauses for changing state
+
+                # calibrate sensors
+
+                # wait for button press before starting
+
+                # line following
+
+                # intersection first turn
+            # elif self.checkBlue():
+            #     self.fsm.transition("toCrossFirstTurn")
+
+                # detect ball
+
+                # collect ball, turn around
+
+                # intersection turn = entry turn
+            """
+
+
             
             self.fsm.execute()
             sleep(0.01)

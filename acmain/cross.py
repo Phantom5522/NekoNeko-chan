@@ -9,8 +9,9 @@ class Cross(object):
    # Finn-Mathis
 
     def updateDistance(self):
-        while self.sensIR.proximity > #optWert:
-            self.drive.followLine
+        #while self.sensIR.proximity > #optWert:
+        #    self.drive.followLine
+        pass
 
     def resetDistance(self):
         self.distance = 0
