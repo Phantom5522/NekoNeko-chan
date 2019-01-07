@@ -49,6 +49,7 @@ class NekoNekoChan(object):
 
         self.fsm.states["checkNextExit"] = State("checkNextExit")
         self.fsm.states["checkNextExit"].addFunc(self.drive.followLine, self.sensValues)
+        
 
         # adding Transitions
         self.fsm.transitions["toFollowLine"] = Transition("followLine")
