@@ -133,7 +133,7 @@ class NekoNekoChan(object):
                 self.fsm.transition("toFollowLine")
             
             # cross
-            if curState == "followLine":
+            if curState == "followLine" and not self.claw.hasBall:
                 if self.checkHalfBlue():
                     Debug.print("Detected Half-Blue")
                     self.fsm.transition("toCheckNextExitStartCross")
@@ -143,7 +143,7 @@ class NekoNekoChan(object):
                 elif self.checkWhite() == False and self.checkNoBlue():
                     self.fsm.transition("toFindBall")
             elif curState == "findBall":
-                if self.claw.hasBall == 1: #A
+                if self.claw.hasBall: #A
                     self.fsm.transition("toFollowLineExitCrossFromUnkown")
                 elif self.drive.largeMotor.position < -1000: #B TODO: value for thr
                     self.fsm.transition("toBackToCrossWithoutBall")

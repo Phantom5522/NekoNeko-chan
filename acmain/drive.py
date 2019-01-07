@@ -18,6 +18,7 @@ class PIDController(PID.PID):
         self.updateConfig()
         self.SetPoint = 0.0
         self.setSampleTime(0.02)    # 0.02s -> 50 Hz refresh rate
+        self.setWindup(40)
 
     def updateConfig(self):
         self.setKp(Config.pidFast[0])
@@ -59,7 +60,7 @@ class Drive(object):
         self.pid.update(feedback)
         turn = self.pid.output
 
-        if abs(turn) > 10:
+        if abs(turn) > 40:
             self.speed = Config.pidFastSpeedMin
         elif self.speed < Config.pidFastSpeedMax:
             self.speed = self.speed + 1
@@ -105,17 +106,17 @@ class Drive(object):
 
         if action == "right":
             enterCross()
-            self.driveMillimeters(100)
+            self.driveMillimeters(50)
             right()
 
         elif action == "left":
             enterCross()
-            self.driveMillimeters(100)
+            self.driveMillimeters(50)
             left()
         elif action == "skip":
             left()
         elif action == "180":
-            self.driveMillimeters(200)
+            self.driveMillimeters(-200)
             reverse()
         else:
             raise AttributeError("no valid action string given for turn()")
@@ -127,6 +128,7 @@ class Drive(object):
 
     def driveMillimeters(self, millimeters):
         self.steerPair.on_for_degrees(0, 20, -1.95*millimeters)
+        sleep(2)
 
     def resetDistance(self):
         self.distance = 0

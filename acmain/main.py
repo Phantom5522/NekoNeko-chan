@@ -32,8 +32,6 @@ def main():
     Debug.print("Running Main Loop...")
     nchan.run()
 
-    nchan.sound.speak('bye bye')
-
     nchan.sound.tone([(698, 100, 0), (622, 100, 0), (523, 100, 0)]) # OFF sound
 
 
