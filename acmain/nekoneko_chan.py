@@ -119,8 +119,8 @@ class NekoNekoChan(object):
 
         self.fsm.setState("followLine")
         while True:
-            Debug.print("Last Blue steps: ", self.lastBlue)
-            if self.lastBlue > 1:
+            if self.lastBlue >= 1:
+                Debug.print("Last Blue steps: ", self.lastBlue)
                 self.lastBlue -= 1
 
             # update sensor values
