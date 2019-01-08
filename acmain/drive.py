@@ -23,13 +23,13 @@ class PIDController(PID.PID):
     def updateConfig(self):
         self.setKp(Config.pidFast[0])
         self.setKi(Config.pidFast[1])
-        self.setKd(Config.pidFast[2])    
+        self.setKd(Config.pidFast[2])
 
 # Class for all movement actions
 class Drive(object):
     speed = 10.0
-    lastFeedback = 0
     onWhite = False
+    curveDirection = 0
 
 
     def __init__(self):
@@ -68,13 +68,14 @@ class Drive(object):
         if lumaWhite and not self.onWhite:
             self.onWhite = True
             self.largeMotor.position = 0
-        elif lumaWhite and self.largeMotor.position < -150: # distance over white > XY mm
-            if self.lastFeedback < 0:
+        elif lumaWhite and self.largeMotor.position < -175: # distance over white > XY mm
+            if self.curveDirection == -1:
                 self.driveMillimeters(-100)
                 self.bounce("left")
-            elif self.lastFeedback > 0:
+            elif self.curveDirection == 1:
                 self.driveMillimeters(-100)
                 self.bounce("right")
+            self.largeMotor.position = 0
         elif not lumaWhite:
             self.onWhite = False
 
@@ -97,7 +98,11 @@ class Drive(object):
 
         self.steerPair.on(-turn, -self.speed)
 
-        self.lastFeedback = feedback
+        if lumaLeft > 200 and lumaRight < 200:
+            self.curveDirection = 1
+        elif lumaLeft < 200 and  lumaRight > 200:
+            self.curveDirection = -1
+            
 
     def followLineSlow(self, speed, sensValues):
         lumaLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
@@ -117,9 +122,9 @@ class Drive(object):
         ''' turns almost 180 degrees in given direction
         '''
         def right():
-            self.steerPair.on_for_degrees(-50, 20, 500)
+            self.steerPair.on_for_degrees(-100, 20, 157)
         def left():
-            self.steerPair.on_for_degrees(50, 20, 500)
+            self.steerPair.on_for_degrees(100, 20, 157)
         
         if action == "right":
             right()
@@ -138,16 +143,18 @@ class Drive(object):
             self.steerPair.on_for_degrees(100, 20, 735)
 
         if action == "right":
-            self.driveMillimeters(50)
+            self.driveMillimeters(-100)
             right()
 
         elif action == "left":
-            self.driveMillimeters(50)
+            self.driveMillimeters(-100)
             left()
         elif action == "skip":
             left()
+        elif action == "back180":
+            self.driveMillimeters(-300)
+            reverse()
         elif action == "180":
-            self.driveMillimeters(-200)
             reverse()
         else:
             raise AttributeError("no valid action string given for turn()")
@@ -159,7 +166,7 @@ class Drive(object):
 
     def driveMillimeters(self, millimeters):
         self.steerPair.on_for_degrees(0, 20, -1.95*millimeters)
-        sleep(1)
+        self.steerPair.wait_until_not_moving()
 
     def resetDistance(self):
         self.distance = 0
