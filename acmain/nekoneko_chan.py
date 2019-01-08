@@ -49,7 +49,7 @@ class NekoNekoChan(object):
             # Cross States
         self.fsm.addState("checkNextExit").addFunc(self.drive.followLine, self.sensValues)
         self.fsm.addState("findBall").addFunc(self.drive.followLine, self.sensValues)
-        self.fsm.addState("backToCross").addFunc(self.drive.followLine, self.sensValues)
+        self.fsm.addState("backToCross").addFunc(self.drive.followLineSlow, 20, self.sensValues)
         self.fsm.addState("approachBall").addFunc(self.drive.followLineSlow, 10, self.sensValues)
         # in state diagramm only named exit
         self.fsm.addState("exitCross").addFunc(self.drive.followLine, self.sensValues)
