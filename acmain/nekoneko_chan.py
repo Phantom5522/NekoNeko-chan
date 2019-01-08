@@ -90,7 +90,7 @@ class NekoNekoChan(object):
         '''
 
     def checkNoBlue(self):
-        return not self.checkHalfBlue()
+        return not (self.checkHalfBlue() or self.checkWhite())
 
     # implement luminaceValues
     def checkHalfBlue(self):
@@ -155,7 +155,7 @@ class NekoNekoChan(object):
             elif curState == "checkNextExit":
                 if self.checkWhite():
                     self.fsm.transition("toCheckNextExitDeadEnd")
-                elif self.checkWhite() == False and self.checkNoBlue():
+                elif self.checkWhite() == False and self.checkNoBlue() and not self.claw.hasBall:
                     self.fsm.transition("toFindBall")
             elif curState == "findBall":
                 if self.claw.hasBall: #A
