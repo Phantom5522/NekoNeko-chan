@@ -61,7 +61,7 @@ class Drive(object):
         if lumaWhite and not self.onWhite:
             self.onWhite = True
             self.largeMotor.position = 0
-        elif lumaWhite and self.largeMotor.position < -175: # distance over white > XY mm
+        elif lumaWhite and self.largeMotor.position < -185: # distance over white > XY mm
             if self.curveDirection == -1:
                 self.driveMillimeters(-100)
                 self.bounce("left")
