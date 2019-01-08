@@ -90,29 +90,29 @@ class Drive(object):
         elif not lumaWhite:
             self.onWhite = False
 
-        self.pid.update(feedback)
-        turn = self.pid.output
+            self.pid.update(feedback)
+            turn = self.pid.output
 
-        if abs(turn) > 40:
-            self.speed = Config.pidFastSpeedMin
-        elif self.speed < Config.pidFastSpeedMax:
-            self.speed = self.speed + 1
-        
+            if abs(turn) > 40:
+                self.speed = Config.pidFastSpeedMin
+            elif self.speed < Config.pidFastSpeedMax:
+                self.speed = self.speed + 1
+            
 
-        # Debug.print("PID output:", round(turn, 1))
-        # Debug.print("Speed:", self.speed)
+            # Debug.print("PID output:", round(turn, 1))
+            # Debug.print("Speed:", self.speed)
 
-        if turn > 100:
-            turn = 100
-        elif turn < -100:
-            turn = -100
+            if turn > 100:
+                turn = 100
+            elif turn < -100:
+                turn = -100
 
-        self.steerPair.on(-turn, -self.speed)
+            self.steerPair.on(-turn, -self.speed)
 
-        if lumaLeft > 200 and lumaRight < 200:
-            self.curveDirection = 1
-        elif lumaLeft < 200 and  lumaRight > 200:
-            self.curveDirection = -1
+            if lumaLeft > 200 and lumaRight < 200:
+                self.curveDirection = 1
+            elif lumaLeft < 200 and  lumaRight > 200:
+                self.curveDirection = -1
             
 
     def followLineSlow(self, speed, sensValues):
