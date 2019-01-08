@@ -18,6 +18,8 @@ class NekoNekoChan(object):
     def __init__(self):
         Config.update()
 
+        self.lastBlue = {}
+
         self.sound = Sound()
 
        # sensor values
@@ -96,7 +98,16 @@ class NekoNekoChan(object):
         hueRight = self.sensValues["ColorRight"][0]
         lumaLeft = self.sensValues["ColorLeft"][1]
         lumaRight = self.sensValues["ColorRight"][1]
-        return (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 80 and lumaLeft < 160) and (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 80 and lumaRight < 160)    # TODO: measure best threshold for blue values
+        
+        if (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 80 and lumaLeft < 160) and (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 80 and lumaRight < 160):
+            self.lastBlue += 2
+
+        if self.lastBlue > 2:
+            self.lastBlue = 0
+            return True
+        else:
+            return False
+    
     def checkWhite(self):
         luminanceLeft = self.sensValues["ColorLeft"][1]
         luminanceRight = self.sensValues["ColorRight"][1]
@@ -108,6 +119,10 @@ class NekoNekoChan(object):
 
         self.fsm.setState("followLine")
         while True:
+
+            if self.lastBlue > 1:
+                self.lastBlue =- 1
+
             # update sensor values
             self.sensValues["ColorLeft"] = self.sensLeft.hls
             self.sensValues["ColorRight"] = self.sensRight.hls
