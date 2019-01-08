@@ -18,7 +18,7 @@ class PIDController(PID.PID):
         self.updateConfig()
         self.SetPoint = 0.0
         self.setSampleTime(0.02)    # 0.02s -> 50 Hz refresh rate
-        self.setWindup(40)
+        # self.setWindup(40)
 
     def updateConfig(self):
         self.setKp(Config.pidFast[0])
@@ -28,6 +28,9 @@ class PIDController(PID.PID):
 # Class for all movement actions
 class Drive(object):
     speed = 10.0
+    lastFeedback = 0
+    onWhite = False
+
 
     def __init__(self):
         self.pid = PIDController(kP= 1.0, kI=0.0, kD=0.1)
@@ -53,9 +56,27 @@ class Drive(object):
         self.pid.updateConfig()
 
     def followLine(self, sensValues):
-        colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
-        colorRight = sensValues["ColorRight"][1] 
-        feedback = colorLeft - colorRight
+        lumaLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
+        lumaRight = sensValues["ColorRight"][1]
+        feedback = lumaLeft - lumaRight
+        lumaWhite = False
+
+        # Debug.print("onWhite: {}\tmotorPos: {}\t LastFeedback: {}\tLuma: {}".format(self.onWhite, self.largeMotor.position, self.lastFeedback, (lumaLeft,lumaRight)))
+        if lumaLeft > 200 and lumaRight > 200:
+            lumaWhite = True
+
+        if lumaWhite and not self.onWhite:
+            self.onWhite = True
+            self.largeMotor.position = 0
+        elif lumaWhite and self.largeMotor.position < -150: # distance over white > XY mm
+            if self.lastFeedback < 0:
+                self.driveMillimeters(-100)
+                self.bounce("left")
+            elif self.lastFeedback > 0:
+                self.driveMillimeters(-100)
+                self.bounce("right")
+        elif not lumaWhite:
+            self.onWhite = False
 
         self.pid.update(feedback)
         turn = self.pid.output
@@ -66,22 +87,22 @@ class Drive(object):
             self.speed = self.speed + 1
         
 
-        Debug.print("PID output:", round(turn, 1))
-        Debug.print("Speed:", self.speed)
+        # Debug.print("PID output:", round(turn, 1))
+        # Debug.print("Speed:", self.speed)
 
         if turn > 100:
             turn = 100
         elif turn < -100:
             turn = -100
 
-        
-
         self.steerPair.on(-turn, -self.speed)
 
+        self.lastFeedback = feedback
+
     def followLineSlow(self, speed, sensValues):
-        colorLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
-        colorRight = sensValues["ColorRight"][1] 
-        feedback = colorLeft - colorRight
+        lumaLeft = sensValues["ColorLeft"][1] # TODO: HSL? Lichtwert anpassen
+        lumaRight = sensValues["ColorRight"][1] 
+        feedback = lumaLeft - lumaRight
 
         self.pid.update(feedback)
         turn = self.pid.output
@@ -91,6 +112,22 @@ class Drive(object):
             turn = -100
 
         self.steerPair.on(-turn, -self.speed)
+    
+    def bounce(self, action):
+        ''' turns almost 180 degrees in given direction
+        '''
+        def right():
+            self.steerPair.on_for_degrees(-50, 20, 500)
+        def left():
+            self.steerPair.on_for_degrees(50, 20, 500)
+        
+        if action == "right":
+            right()
+        elif action == "left":
+            left()
+        else:
+            raise AttributeError("no valid action string given for bounce()")
+
 
     def turn(self, action, sensValues = None):
         def enterCross():
@@ -128,7 +165,7 @@ class Drive(object):
 
     def driveMillimeters(self, millimeters):
         self.steerPair.on_for_degrees(0, 20, -1.95*millimeters)
-        sleep(2)
+        sleep(1)
 
     def resetDistance(self):
         self.distance = 0

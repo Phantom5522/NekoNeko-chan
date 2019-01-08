@@ -10,17 +10,15 @@ from tones import Tones
 
 def main():
     nchan = NekoNekoChan() # create object instance of robot
-    nchan.sound.tone([(523, 100, 0), (622, 100, 0), (698, 100, 0)]) # on sound
+    nchan.sound.tone([(523, 100, 0), (622, 100, 0), (698, 100, 500)]) # on sound
     
     # calibrate color sensors on white surface
     # nchan.sound.speak("calibrating")
     # nchan.sound.tone(Tones.zelda)
     nchan.sensLeft.calibrate_white()
     nchan.sensRight.calibrate_white()
-    nchan.sound.tone([(698, 100, 0)])
+    nchan.sound.tone([(698, 400, 0)])
 
-
-    nchan.sound.speak('ready')
     # wait for button press before starting the challenge
     while not nchan.sensTouch.is_pressed:
          sleep(0.1)
