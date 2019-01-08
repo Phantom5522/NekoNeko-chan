@@ -145,7 +145,7 @@ class Drive(object):
         elif action == "skip":
             left()
         elif action == "back180":
-            self.driveMillimeters(-300, speed=40)
+            self.driveMillimeters(-175, speed=40)
             reverse()
         elif action == "180":
             reverse()

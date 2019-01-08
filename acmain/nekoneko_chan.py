@@ -144,7 +144,7 @@ class NekoNekoChan(object):
                 break
 
             # Normal Mode
-            if curState == "brake" and not (self.sensValues["ColorLeft"][1] < 10.0 or self.sensValues["ColorRight"][1] < 10.0):
+            if curState == "brake" and not (self.sensValues["ColorLeft"][1] < 5.0 or self.sensValues["ColorRight"][1] < 5.0):
                 self.fsm.transition("toFollowLine")
             
             # cross
