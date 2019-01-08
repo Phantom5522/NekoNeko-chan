@@ -135,10 +135,11 @@ class Drive(object):
         def reverse():
             self.steerPair.on_for_degrees(100, 20, 725)
 
-        if action == "right":
+        if action == "rightFirst":
             self.driveMillimeters(-50)
             right()
-
+        elif action == "right":
+            right()
         elif action == "left":
             self.driveMillimeters(-50)
             left()

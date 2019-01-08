@@ -62,7 +62,7 @@ class NekoNekoChan(object):
         self.fsm.addTransition("brake").addFunc(self.drive.brake)
 
             # Cross Transitions
-        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw).addFunc(self.drive.turn, "right")
+        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw).addFunc(self.drive.turn, "rightFirst")
         self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.drive.turn, "skip")          
         self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.drive.turn, "right").addFunc(self.cross.updateTTE)
 
