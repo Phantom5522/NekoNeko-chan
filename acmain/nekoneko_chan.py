@@ -90,7 +90,7 @@ class NekoNekoChan(object):
         '''
 
     def checkNoBlue(self):
-        return not (self.checkHalfBlue() or self.drive.checkBlue(self.sensValues))
+        return not self.checkHalfBlue()
 
     # implement luminaceValues
     def checkHalfBlue(self):
@@ -119,8 +119,8 @@ class NekoNekoChan(object):
 
         self.fsm.setState("followLine")
         while True:
-
-            if self.lastBlue > 1:
+            if self.lastBlue >= 1:
+                Debug.print("Last Blue steps: ", self.lastBlue)
                 self.lastBlue -= 1
 
             # update sensor values
