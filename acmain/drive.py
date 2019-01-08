@@ -30,7 +30,6 @@ class Drive(object):
     speed = 10.0
     onWhite = False
     curveDirection = 0
-    searchLine = False
 
 
     def __init__(self):
@@ -59,34 +58,17 @@ class Drive(object):
         if lumaLeft > 200 and lumaRight > 200:
             lumaWhite = True
 
-        if self.searchLine and not lumaWhite:
-            self.searchLine = False
-            self.onWhite = False
-            Debug.print("Line Found :)")
-
-        elif lumaWhite and not self.onWhite:
-            self.steerPair.off()
+        if lumaWhite and not self.onWhite:
             self.onWhite = True
             self.largeMotor.position = 0
         elif lumaWhite and self.largeMotor.position < -185: # distance over white > XY mm
-            self.searchLine = True
-            Debug.print("Line Lost :(")
             if self.curveDirection == -1:
-                self.driveMillimeters(-70)
-                self.steerPair.on_for_degrees(-100, 20, 500)
+                self.driveMillimeters(-100)
+                self.bounce("left")
             elif self.curveDirection == 1:
-                self.driveMillimeters(-70)
-                self.steerPair.on_for_degrees(100, 20, 500)
+                self.driveMillimeters(-100)
+                self.bounce("right")
             self.largeMotor.position = 0
-        elif self.searchLine and not self.steerPair.is_running:
-            Debug.print("Search Line unsuccessful, trying other direction...")
-            if self.curveDirection == -1:
-                self.driveMillimeters(-70)
-                self.steerPair.on_for_degrees(100, 20, 500)
-            elif self.curveDirection == 1:
-                self.driveMillimeters(-70)
-                self.steerPair.on_for_degrees(-100, 20, 500)
-
         elif not lumaWhite:
             self.onWhite = False
 
@@ -130,7 +112,7 @@ class Drive(object):
         self.steerPair.on(-turn, -self.speed)
     
     def bounce(self, action):
-        ''' turns XY degrees in given direction
+        ''' turns almost 180 degrees in given direction
         '''
         def right():
             self.steerPair.on_for_degrees(-100, 20, 157)
