@@ -18,7 +18,7 @@ class NekoNekoChan(object):
     def __init__(self):
         Config.update()
 
-        self.lastBlue = {}
+        self.lastBlue = 0
 
         self.sound = Sound()
 
@@ -72,7 +72,7 @@ class NekoNekoChan(object):
         self.fsm.addTransition("followLine","exitCrossFromUnkown")
 
         self.fsm.addTransition("backToCross","withoutBall").addFunc(self.drive.turn, "180").addFunc(self.cross.setTTE)
-        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw, True).addFunc(self.drive.turn, "180")
+        self.fsm.addTransition("backToCross","withBall").addFunc(self.claw.closeClaw, True).addFunc(self.drive.turn, "back180")
 
         self.fsm.addTransition("approachBall")
 
