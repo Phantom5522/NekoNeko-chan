@@ -180,7 +180,7 @@ class NekoNekoChan(object):
                     self.fsm.transition("toFollowLineExitCrossFromKown")
 
             # From any State
-            if curState != "brake" and (self.sensValues["ColorLeft"][1] < 4.5 or self.sensValues["ColorRight"][1] < 4.5):
+            if curState != "brake" and (self.sensValues["ColorLeft"][1] < 4.0 or self.sensValues["ColorRight"][1] < 4.0):
                 self.fsm.transition("toBrake")
             
             self.fsm.execute()
