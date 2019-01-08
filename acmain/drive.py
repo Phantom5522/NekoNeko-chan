@@ -92,11 +92,7 @@ class Drive(object):
 
         self.steerPair.on(-turn, -self.speed)
 
-    def turn(self, action, sensValues = None):
-        def enterCross():
-            while not self.checkBlue(sensValues):
-                self.followLineSlow(10, sensValues)
-
+    def turn(self, action):
         def right():
             self.steerPair.on_for_degrees(-100, 20, 377)
         def left():
@@ -105,12 +101,10 @@ class Drive(object):
             self.steerPair.on_for_degrees(100, 20, 735)
 
         if action == "right":
-            enterCross()
             self.driveMillimeters(50)
             right()
 
         elif action == "left":
-            enterCross()
             self.driveMillimeters(50)
             left()
         elif action == "skip":

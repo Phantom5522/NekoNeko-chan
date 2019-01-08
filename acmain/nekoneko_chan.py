@@ -62,9 +62,9 @@ class NekoNekoChan(object):
         self.fsm.addTransition("brake").addFunc(self.drive.brake)
 
             # Cross Transitions
-        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw).addFunc(self.drive.turn, "right", self.sensValues)
+        self.fsm.addTransition("checkNextExit","startCross").addFunc(self.claw.releaseClaw).addFunc(self.drive.turn, "right")
         self.fsm.addTransition("checkNextExit","deadEnd").addFunc(self.drive.turn, "skip")          
-        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.drive.turn, "right", self.sensValues).addFunc(self.cross.updateTTE)
+        self.fsm.addTransition("checkNextExit","backToCross").addFunc(self.drive.turn, "right").addFunc(self.cross.updateTTE)
 
         self.fsm.addTransition("findBall").addFunc(self.drive.resetDistance)
 
@@ -76,7 +76,7 @@ class NekoNekoChan(object):
 
         self.fsm.addTransition("approachBall")
 
-        self.fsm.addTransition("exitCross", "left").addFunc(self.drive.turn, "left", self.sensValues)
+        self.fsm.addTransition("exitCross", "left").addFunc(self.drive.turn, "left")
         self.fsm.addTransition("exitCross", "straight")
 
         '''
@@ -121,7 +121,7 @@ class NekoNekoChan(object):
         while True:
 
             if self.lastBlue > 1:
-                self.lastBlue =- 1
+                self.lastBlue -= 1
 
             # update sensor values
             self.sensValues["ColorLeft"] = self.sensLeft.hls
