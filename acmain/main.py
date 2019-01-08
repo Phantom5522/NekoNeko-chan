@@ -26,7 +26,7 @@ def main():
     nchan.sound.tone([(698, 100, 0)])
     sleep(1)
 
-    # nchan.claw.closeClaw() TODO: enable for challenge
+    nchan.claw.closeClaw() #TODO: enable for challenge
     Debug.print("Running Main Loop...")
     nchan.run()
 
