@@ -41,13 +41,6 @@ class Drive(object):
 
         # self.speed = Config.data['pid']['fast']['speed_max']
 
-    def checkBlue(self, sensValues):
-        hueLeft = sensValues["ColorLeft"][0]
-        hueRight = sensValues["ColorRight"][0]
-        lumaLeft = sensValues["ColorLeft"][1]
-        lumaRight = sensValues["ColorRight"][1]
-        return (hueLeft > 0.5 and hueLeft < 0.65 and lumaLeft > 80 and lumaLeft < 160) and (hueRight > 0.5 and hueRight < 0.65 and lumaRight > 80 and lumaRight < 160)    # TODO: measure best threshold for blue values
-
     def updateConfig(self):
         self.speed = Config.data['pid']['fast']['speed_max']
         self.pid.updateConfig()
