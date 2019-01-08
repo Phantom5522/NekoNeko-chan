@@ -136,16 +136,16 @@ class Drive(object):
             self.steerPair.on_for_degrees(100, 20, 735)
 
         if action == "right":
-            self.driveMillimeters(-100)
+            self.driveMillimeters(-50)
             right()
 
         elif action == "left":
-            self.driveMillimeters(-100)
+            self.driveMillimeters(-50)
             left()
         elif action == "skip":
             left()
         elif action == "back180":
-            self.driveMillimeters(-300)
+            self.driveMillimeters(-300, speed=40)
             reverse()
         elif action == "180":
             reverse()
@@ -157,8 +157,8 @@ class Drive(object):
     def brake(self):
         self.steerPair.off()
 
-    def driveMillimeters(self, millimeters):
-        self.steerPair.on_for_degrees(0, 20, -1.95*millimeters)
+    def driveMillimeters(self, millimeters, speed = 20):
+        self.steerPair.on_for_degrees(0, speed, -1.95*millimeters)
         self.steerPair.wait_until_not_moving()
 
     def resetDistance(self):
